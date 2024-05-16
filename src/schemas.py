@@ -1,8 +1,11 @@
 import uuid
 
 from fastapi_users import schemas
-from pydantic import BaseModel,field_validator
-from pydantic.types import constr
+from pydantic import field_validator
+from pydantic import (
+    ValidationInfo,
+    field_validator,
+)
 
 
 
@@ -19,14 +22,12 @@ class UserCreate(schemas.BaseUserCreate):
     phone_number: str 
     @field_validator('phone_number')
     @classmethod
-    def phone_number_must_contain_plus(cls, v: str) -> str:
-        prefix = '+7'
-        if not cls.phone_number.starts_with(prefix):
-            raise ValueError('Must contain a +7')
-        return v.title()
+    def check_numeric(cls, v: str, info: ValidationInfo) -> str:
+        if isinstance(v, str):
+            is_numeric = v.replace(' ', '').isnumeric()
+            assert is_numeric, f'{info.field_name} phone number must be numeric'
+        return v
 
-
-#str.startswith(prefix[, start[, end]])
 
 class UserUpdate(schemas.BaseUserUpdate):
     position: str 
@@ -34,8 +35,8 @@ class UserUpdate(schemas.BaseUserUpdate):
     phone_number: str
     @field_validator('phone_number')
     @classmethod
-    def phone_number_must_contain_plus(cls, v: str) -> str:
-        prefix = '+7'
-        if not cls.phone_number.starts_with(prefix):
-            raise ValueError('Must contain a +7')
-        return v.title()
+    def check_numeric(cls, v: str, info: ValidationInfo) -> str:
+        if isinstance(v, str):
+            is_numeric = v.replace(' ', '').isnumeric()
+            assert is_numeric, f'{info.field_name} phone number must be numeric'
+        return v
