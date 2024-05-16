@@ -4,7 +4,15 @@ from src.db import User, create_db_and_tables
 from src.schemas import UserCreate, UserRead, UserUpdate
 from src.users import auth_backend, current_active_user, fastapi_users
 
-app = FastAPI()
+from settings import config
+
+
+# P R E S E N T A T I O N    D A T A
+contact_dict = dict(name=config['CONTACT_NAME'],
+                    email=config['CONTACT_EMAIL'],
+                                  )
+app = FastAPI(title=config['API_TITLE'],description=config['API_DESCRIPTION'],contact=contact_dict)
+
 
 app.include_router(
     fastapi_users.get_auth_router(auth_backend), prefix="/auth/jwt", tags=["auth"]
