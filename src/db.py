@@ -22,12 +22,12 @@ class User(SQLAlchemyBaseUserTableUUID, Base):
     """
     User extended table.
     """
-    pass
-    # position: Mapped[str] = mapped_column(String(30))
-    # company: Mapped[str] = mapped_column(String)
-    # phone_number: Mapped[str] = mapped_column(String, nullable=False)
-    # def __repr__(self):
-    #     return f"User={self.name}   email={self.email} "
+    __tablename__ = "users_table"
+    position: Mapped[str] = mapped_column(String(100))
+    company: Mapped[str] = mapped_column(String)
+    phone_number: Mapped[str] = mapped_column(String, nullable=False)
+    def __repr__(self):
+        return f"User={self.name}   email={self.email} "
 
 
 

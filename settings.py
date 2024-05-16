@@ -17,10 +17,10 @@ elif config['POSTGRES_DOCKER_BUILD'] == 'False':
     PG_HOST = config["POSTGRES_HOST_LOCAL"]
     
     # If you prefer on the start this cmd will execute - run docker container with postgres instance
-    os.system(PG_DOCKER_RUN_DEV_MODE)             # DEV_DOKER_POSTGRES_CMD='docker run --name db_postgres  -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -d postgres:latest'
+    # os.system(PG_DOCKER_RUN_DEV_MODE)             # DEV_DOKER_POSTGRES_CMD='docker run --name db_postgres  -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -d postgres:latest'
 
-    time.sleep(10)
-    os.system(f'echo "Service is run on {PG_HOST}"')
+    # time.sleep(10)
+    # os.system(f'echo "Service is run on {PG_HOST}"')
 
 
 PG_PASS = config['POSTGRES_PASSWORD']
