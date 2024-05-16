@@ -1,10 +1,11 @@
 from typing import AsyncGenerator
-
+from sqlalchemy.orm import Mapped, mapped_column
 from fastapi import Depends
 from fastapi_users.db import SQLAlchemyBaseUserTableUUID, SQLAlchemyUserDatabase
-from settings
+from settings import *
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
+from sqlalchemy import Integer, String, ForeignKey, Text, Boolean, DateTime, Table, Column,LargeBinary
 from sqlalchemy.orm import sessionmaker
 
 ## here
@@ -18,7 +19,18 @@ Base: DeclarativeMeta = declarative_base()
 
 
 class User(SQLAlchemyBaseUserTableUUID, Base):
-    pass
+    """
+    User extended table.
+    """
+    position: Mapped[str] = mapped_column(String(30))
+    company: Mapped[str] = mapped_column(String)
+    phone_number: Mapped[str] = mapped_column(String, nullable=False)
+    def __repr__(self):
+        return f"User= {self.name}   {self.surname} "
+
+
+
+
    
     
 
