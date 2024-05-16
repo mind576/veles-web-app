@@ -1,19 +1,16 @@
 ** Users management **
 
 > [!NOTE]
-> Приложение для User Management.
+> Приложение для - Auth User Management ( В процессе разработки ).
 
 
-### Features¶
-Extensible base user model
-Ready-to-use register, login, reset password and verify e-mail routes
-Ready-to-use social OAuth2 login flow
-Dependency callables to inject current user in route
-Pluggable password validation
-Customizable database backend
-SQLAlchemy ORM async included
-MongoDB with Beanie ODM included
-Multiple customizable authentication backends
-Transports: Authorization header, Cookie
-Strategies: JWT, Database, Redis
-Full OpenAPI schema support, even with several authentication backends
+### Auth User App - Микросервис 
+
+
+
+> [!NOTE]
+> Тут ниже будут напоминания и корректировки - `made by myself`:
+
+Please add data_field: - `registered_date`
+
+Please rethink user_table extention how: `inherite class and create new ORM class`
