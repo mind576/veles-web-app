@@ -9,7 +9,11 @@ root_dir = pathlib.Path(__file__).parent.resolve()
 # DOTENV FILE
 config = dotenv_values(f"{root_dir}/.env")
 
+<<<<<<< HEAD
 # Dev usage
+=======
+# # # #      - = TEMP KLUDGE = -    DEVELOPMENT USAGE ONLY (костыль для разработки)
+>>>>>>> refs/remotes/origin/main
 if config['POSTGRES_DOCKER_BUILD'] == 'True':
     PG_HOST = config["POSTGRES_HOST_DOCKER"]
 elif config['POSTGRES_DOCKER_BUILD'] == 'False':
