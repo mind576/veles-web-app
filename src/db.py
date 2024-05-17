@@ -1,12 +1,13 @@
-from typing import AsyncGenerator
+from typing import AsyncGenerator,List, Optional
 from sqlalchemy.orm import Mapped, mapped_column
 from fastapi import Depends
 from fastapi_users.db import SQLAlchemyBaseUserTableUUID, SQLAlchemyUserDatabase
 from settings import *
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
-from sqlalchemy import Integer, String, ForeignKey, Text, Boolean, DateTime, Table, Column,LargeBinary
+from sqlalchemy import String, Date, ForeignKey,JSON
 from sqlalchemy.orm import sessionmaker
+import datetime
 
 ## here
 DATABASE_URL = f"postgresql+asyncpg://{PG_USER}:{PG_PASS}@{PG_HOST}:{PG_PORT}/{PG_DB_NAME}"
@@ -23,14 +24,24 @@ class User(SQLAlchemyBaseUserTableUUID, Base):
     User extended table.
     """
     __tablename__ = "users_table"
-    position: Mapped[str] = mapped_column(String(100))
-    company: Mapped[str] = mapped_column(String)
     phone_number: Mapped[str] = mapped_column(String, nullable=False)
+    registred_date: Mapped[datetime.date] = mapped_column(Date)
     def __repr__(self):
         return f"User={self.name}   email={self.email} "
 
 
-
+class UserExtension(Base):
+    __tablename__ = 'user_extension'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users_table.id"))
+    position: Mapped[str] = mapped_column(String)
+    company: Mapped[str] = mapped_column(String)
+    employeed_date: Mapped[datetime.date] = mapped_column(Date)
+    allowances: Mapped[Optional[dict]] = mapped_column(JSON)
+    
+    def __repr__(self):
+        return f"User_id={self.user_id}   email={self.company} "
+    
 
    
     
