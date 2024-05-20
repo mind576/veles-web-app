@@ -3,12 +3,14 @@ from sqlalchemy.orm import Mapped, mapped_column
 from fastapi_users.db import SQLAlchemyBaseUserTableUUID
 from settings import *
 from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
-from sqlalchemy import String, Date, ForeignKey,JSON
+from sqlalchemy import String, Date, ForeignKey,JSON, LargeBinary
 from datetime import date
-
+import uuid
 
 
 Base: DeclarativeMeta = declarative_base()
+
+UUID_ID = uuid.UUID
 
 
 class User(SQLAlchemyBaseUserTableUUID, Base):
@@ -23,7 +25,7 @@ class User(SQLAlchemyBaseUserTableUUID, Base):
 
 
 class UserExtension(Base):
-    """ User Extention model which has obvious fields:
+    """ User Extension ORM model which has obvious fields:
     -- This model extends class User and stores additional fields data.
     Args:
         Base (SQLAlchemy Base class): 
@@ -32,9 +34,32 @@ class UserExtension(Base):
     """
     __tablename__ = 'user_extension'
     id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users_table.id"))
+    user_id: Mapped[UUID_ID] = mapped_column(ForeignKey("users_table.id"))
     position: Mapped[Optional[str]] = mapped_column(String)
-    company: Mapped[Optional[str]] = mapped_column(String)
+    company: Mapped[UUID_ID] = mapped_column(ForeignKey("company_table.id"))
     options: Mapped[Optional[dict]] = mapped_column(JSON)
     def __repr__(self):
-        return f"User_id={self.user_id}   email={self.company} "
+        return f"UserExtension_users_id={self.user_id}   company_name={self.company} "
+    
+    
+    
+class Company(Base):
+    """ Company model which has obvious fields:
+    -- This model creates ORM model for business or Company.
+    Args:
+        Base (SQLAlchemy Base class): 
+    Returns:
+        Company ORM Model:
+    """
+    __tablename__ = 'company_table'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    company_name: Mapped[Optional[str]] = mapped_column(String)
+    director: Mapped[Optional[UUID_ID]] = mapped_column(ForeignKey("users_table.id")) # How many directors may run business ??
+    email: Mapped[Optional[str]] = mapped_column(String)
+    address: Mapped[Optional[str]] = mapped_column(String)
+    location: Mapped[Optional[str]] = mapped_column(String)
+    options: Mapped[Optional[dict]] = mapped_column(JSON)
+    credentials: Mapped[Optional[dict]] = mapped_column(JSON)
+    company_logo: Mapped[Optional[bytes]] = mapped_column(LargeBinary)
+    def __repr__(self):
+        return f"Company Name={self.user_id} company_id={self.id}"
