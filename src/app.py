@@ -1,8 +1,9 @@
 from fastapi import Depends, FastAPI
-
-from src.db import User, create_db_and_tables
+from src.models import User
+from src.db import create_db_and_tables
 from src.schemas import UserCreate, UserRead, UserUpdate
 from src.users import auth_backend, current_active_user, fastapi_users
+from src.extender import router as user_extender_router
 
 from settings import config
 
@@ -13,35 +14,40 @@ contact_dict = dict(name=config['CONTACT_NAME'],
                                   )
 app = FastAPI(title=config['API_TITLE'],description=config['API_DESCRIPTION'],contact=contact_dict)
 
+# User Extender Router - Imported from module extender.py
+app.include_router(
+    user_extender_router,tags=['UserExtention Methods']
+    )
 
 app.include_router(
-    fastapi_users.get_auth_router(auth_backend), prefix="/auth/jwt", tags=["auth"]
+    fastapi_users.get_auth_router(auth_backend), prefix="/auth/jwt", tags=["Login / Logout Methods"]
 )
 app.include_router(
     fastapi_users.get_register_router(UserRead, UserCreate),
     prefix="/auth",
-    tags=["auth"],
+    tags=["Register User Methods"],
 )
 app.include_router(
     fastapi_users.get_reset_password_router(),
     prefix="/auth",
-    tags=["auth"],
+    tags=["Reset Password Methods"],
 )
 app.include_router(
     fastapi_users.get_verify_router(UserRead),
     prefix="/auth",
-    tags=["auth"],
+    tags=["Veryfy Methods"],
 )
 app.include_router(
     fastapi_users.get_users_router(UserRead, UserUpdate),
     prefix="/users",
-    tags=["users"],
+    tags=["User CRUD Methods"],
 )
 
 
-@app.get("/authenticated-route")
+@app.get("/authenticated-route",tags=['Hello World Method'])
 async def authenticated_route(user: User = Depends(current_active_user)):
     return {"message": f"Hello {user.email}!"}
+
 
 
 @app.on_event("startup")

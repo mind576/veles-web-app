@@ -1,65 +1,53 @@
-from typing import AsyncGenerator,List, Optional
-from sqlalchemy.orm import Mapped, mapped_column
+from typing import AsyncGenerator
 from fastapi import Depends
-from fastapi_users.db import SQLAlchemyBaseUserTableUUID, SQLAlchemyUserDatabase
+from fastapi_users.db import SQLAlchemyUserDatabase
 from settings import *
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
-from sqlalchemy import String, Date, ForeignKey,JSON
-from sqlalchemy.orm import sessionmaker
-import datetime
+from src.models import Base,User,UserExtension
 
-## here
+## database URL
 DATABASE_URL = f"postgresql+asyncpg://{PG_USER}:{PG_PASS}@{PG_HOST}:{PG_PORT}/{PG_DB_NAME}"
 
+# Engine which invokes connection to DB
 engine = create_async_engine(DATABASE_URL, echo=True)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
-# DATABASE_URL = "sqlite+aiosqlite:///./test.db"
-Base: DeclarativeMeta = declarative_base()
-
-
-class User(SQLAlchemyBaseUserTableUUID, Base):
-    """
-    User extended table.
-    """
-    __tablename__ = "users_table"
-    phone_number: Mapped[str] = mapped_column(String, nullable=False)
-    registred_date: Mapped[datetime.date] = mapped_column(Date)
-    def __repr__(self):
-        return f"User={self.name}   email={self.email} "
-
-
-class UserExtension(Base):
-    __tablename__ = 'user_extension'
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users_table.id"))
-    position: Mapped[str] = mapped_column(String)
-    company: Mapped[str] = mapped_column(String)
-    employeed_date: Mapped[datetime.date] = mapped_column(Date)
-    allowances: Mapped[Optional[dict]] = mapped_column(JSON)
-    
-    def __repr__(self):
-        return f"User_id={self.user_id}   email={self.company} "
-    
-
-   
-    
-
-
-engine = create_async_engine(DATABASE_URL)
-async_session_maker = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
-
 
 async def create_db_and_tables():
+    """Create database and tables : Async function
+    """
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
+    """Get AsyncSession: Async functon:
+    Returns:
+        AsyncGenerator[AsyncSession, None]:
+    """
     async with async_session_maker() as session:
         yield session
 
 
 async def get_user_db(session: AsyncSession = Depends(get_async_session)):
+    """Get user database: Async function
+    Args:
+        session (AsyncSession, optional): _description_. Defaults to Depends(get_async_session).
+
+    Yields:
+        _type_: User
+    """
     yield SQLAlchemyUserDatabase(session, User)
+
+
+async def get_user_extention(session: AsyncSession = Depends(get_async_session)):
+    """Get user extension: Async function
+
+    Args:
+        session (AsyncSession, optional): _description_. Defaults to Depends(get_async_session).
+
+    Yields:
+        _type_: UserExtention
+    """
+
+    yield SQLAlchemyUserDatabase(session, UserExtension)
