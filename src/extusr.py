@@ -6,7 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from src.models import User, UserExtension
 from starlette import status
 from src.users import current_active_user
-from src.db import AsyncSession, get_user_extension_db
+from src.db import AsyncSession, get_async_session
 from src.schemas import UserExtCreate, UserExtRead, UserUpdate
 import uuid
 
@@ -20,7 +20,7 @@ ext_router = APIRouter(prefix="/ext",
 async def create_user_extension(
     ext: UserExtCreate,
     user: User = Depends(current_active_user),
-    session: AsyncSession = Depends(get_user_extension_db),
+    session: AsyncSession = Depends(get_async_session),
     ):
     """
     Async method that creates and puts UserExtention item to database:

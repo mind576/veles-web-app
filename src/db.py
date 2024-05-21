@@ -40,14 +40,3 @@ async def get_user_db(session: AsyncSession = Depends(get_async_session)):
     yield SQLAlchemyUserDatabase(session, User)
 
 
-async def get_user_extension_db(session: AsyncSession = Depends(get_async_session)):
-    """Get user extension: Async function
-
-    Args:
-        session (AsyncSession, optional): _description_. Defaults to Depends(get_async_session).
-
-    Yields:
-        _type_: UserExtention
-    """
-
-    yield SQLAlchemyUserDatabase(session, UserExtension)
