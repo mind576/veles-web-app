@@ -16,11 +16,11 @@ app = FastAPI(title=config['API_TITLE'],description=config['API_DESCRIPTION'],co
 
 # User Extender Router - Imported from module extender.py
 app.include_router(
-    user_extender_router,tags=['UserExtention Methods']
+    user_extender_router,tags=['UserExtension Methods']
     )
 
 app.include_router(
-    company_router,tags=['Business & Company Methods ']
+    company_router,tags=['Company Methods ']
     )
 
 app.include_router(

@@ -5,6 +5,7 @@ from settings import *
 from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
 from sqlalchemy import String, Date, ForeignKey,JSON, LargeBinary
 from datetime import date
+from sqlalchemy.dialects.postgresql import ARRAY
 import uuid
 
 
@@ -15,18 +16,17 @@ UUID_ID = uuid.UUID
 
 class User(SQLAlchemyBaseUserTableUUID, Base):
     """
-    User table.
+    User table - basic User ORM model that helps perform Authentification and OAuth needs.
     """
     __tablename__ = "users_table"
     phone_number: Mapped[str] = mapped_column(String, nullable=False)
-    registred_date: Mapped[date.fromisoformat] = mapped_column(Date)
     def __repr__(self):
-        return f"User={self.name}   email={self.email} "
+        return f"User={self.full_name}   email={self.email} "
 
 
 class UserExtension(Base):
-    """ User Extension ORM model which has obvious fields:
-    -- This model extends class User and stores additional fields data.
+    """ User Extension ORM model:
+    -- This model extends class User and helps to store additional data fields .
     Args:
         Base (SQLAlchemy Base class): 
     Returns:
@@ -38,14 +38,17 @@ class UserExtension(Base):
     position: Mapped[Optional[str]] = mapped_column(String)
     company: Mapped[UUID_ID] = mapped_column(ForeignKey("company_table.id"))
     options: Mapped[Optional[dict]] = mapped_column(JSON)
+    birth_date: Mapped[date.fromisoformat] = mapped_column(Date)
+    avatar: Mapped[Optional[bytes]] = mapped_column(LargeBinary)
+    full_name: Mapped[str] = mapped_column(String)
     def __repr__(self):
         return f"UserExtension_users_id={self.user_id}   company_name={self.company} "
     
     
     
 class Company(Base):
-    """ Company model which has obvious fields:
-    -- This model creates ORM model for business or Company.
+    """ Company ORM model:
+    -- This model helps to store Company item data fields .
     Args:
         Base (SQLAlchemy Base class): 
     Returns:
