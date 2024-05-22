@@ -9,7 +9,6 @@ from pydantic import (
     field_validator,
     BaseModel,
     Field,
-    AliasChoices, 
     StrictBytes,
     StrictStr,
     ByteSize,
@@ -21,11 +20,13 @@ from pydantic import (
 current_time = datetime.now()
 
 # Base User
-class UserRead(schemas.BaseUser[uuid.UUID]):
+class UserRead(schemas.BaseUser[int]):
+    full_name: str
     phone_number: str
 
 
 class UserCreate(schemas.BaseUserCreate):
+    full_name: str
     phone_number: str 
     @field_validator('phone_number')
     @classmethod
@@ -55,34 +56,33 @@ class UserUpdate(schemas.BaseUserUpdate):
     
     
 class UserExtRead(BaseModel):
-    user_id: uuid.UUID
+    user_id: int
     position: str
     company: str
     options: dict
     birth_date: bytes
     avatar: str
-    full_name: str
+    
 
 
 class UserExtCreate(BaseModel):
-    user_id: uuid.UUID
+    user_id: int
     position: str = Field()
     company: str =Field()
     options: Optional[dict] = Field()
     birth_date: Optional[datetime] = Field()
     avatar: Optional[Union[StrictStr,StrictBytes]] = Field()
-    full_name: str = Field()
+    
     
 
     
 class UserExtUpdate(BaseModel):
-    user_id: uuid.UUID
+    user_id: int
     position: str = Field(default=None)
     company: str =Field(default=None)
     options: Optional[dict] = Field(default=None)
     birth_date: Optional[datetime] = Field(default=None)
     avatar: Optional[Union[StrictStr,StrictBytes]] = Field(default=None)
-    full_name: str = Field(default=None)
     
     
     
@@ -90,7 +90,7 @@ class UserExtUpdate(BaseModel):
     
 # Company Schemas
 class CompanyCreate(BaseModel):
-    company_name:   Optional[str] = Field()
+    company_name: Optional[str] = Field()
     email: Optional[EmailStr] = Field()
     address: Optional[str] = Field()
     location: Optional[str] = Field()
@@ -109,7 +109,7 @@ class CompanyUpdate(BaseModel):
     
     
 class CompanyRead(BaseModel):
-    id: uuid.UUID
+    id: int
     company_name:  str
     director: str
     email: EmailStr

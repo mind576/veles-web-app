@@ -6,7 +6,8 @@ from src.users import auth_backend, current_active_user, fastapi_users
 from src.extusr import ext_router as user_extender_router
 from src.cmp import cmp_router as company_router
 from settings import config
-
+from src.db import Base 
+from src.db import engine
 
 # P R E S E N T A T I O N    D A T A
 contact_dict = dict(name=config['CONTACT_NAME'],
@@ -18,11 +19,12 @@ app = FastAPI(title=config['API_TITLE'],description=config['API_DESCRIPTION'],co
 app.include_router(
     user_extender_router,tags=['UserExtension Methods']
     )
-
+# company Router - cmp.py
 app.include_router(
     company_router,tags=['Company Methods ']
     )
 
+# users backend
 app.include_router(
     fastapi_users.get_auth_router(auth_backend), prefix="/auth/jwt", tags=["Login / Logout Methods"]
 )
@@ -53,8 +55,9 @@ async def authenticated_route(user: User = Depends(current_active_user)):
     return {"message": f"Hello {user.email}!"}
 
 
-
+import importlib
 @app.on_event("startup")
 async def on_startup():
-    # Not needed if you setup a migration system like Alembic
-    await create_db_and_tables()
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+        # await conn.run_sync(Base.metadata.drop_all)

@@ -25,18 +25,17 @@ async def create_user_extension(
     session: AsyncSession = Depends(get_async_session),
     ):
     """
-    Async method that creates and puts UserExtention item to database:
+    ### Async method that creates UserExtention item to database:\n
     UserExtention are linked with User by ForeinKey parameter so extends
-    basic User Model and gives additional fields to User.
-    Additional fields has needed data for disclosure User's options and information about User credentials.
-
-    Args:
-        active user (UserExtention, optional): _description_. Defaults to Depends(current_active_user).
-        session (AsyncSession, optional): _description_. Defaults to Depends(get_async_session).
-        extention (UserExtension, optional): _description_. Defaults to Depends(current_user).
-
-    Returns:
-        _type_: _description_
+    basic User Model and gives additional fields to User.\n
+   
+    
+    Args:\n
+        active user - Depends(current_active_user).\n
+        session - (AsyncSession) Depends(get_async_session).\n
+        extention - UserExtCreate shema\n
+        
+    #### Please read schema for understanding JSON schema
     """
     try:
         new_extention = UserExtension(
@@ -45,8 +44,7 @@ async def create_user_extension(
             company= ext.position,
             options = ext.options,
             birth_date = ext.birth_date,
-            avatar = ext.avatar,
-            full_name = ext.full_name
+            avatar = ext.avatar
         ) 
         session.add(new_extention)
         await session.commit()
@@ -63,29 +61,21 @@ async def update_user_extension(
     session: AsyncSession = Depends(get_async_session),
     ):
     """
-    
-    Args:
-        active user (UserExtention, optional): _description_. Defaults to Depends(current_active_user).
-        session (AsyncSession, optional): _description_. Defaults to Depends(get_async_session).
-        extention (UserExtension, optional): _description_. Defaults to Depends(current_user).
+   ### Async method that puts or updates UserExtention item to database:\n
+    UserExtention are linked with User by ForeinKey parameter so extends
+    basic User Model and gives additional fields to User.\n
+   
 
-    Returns:
-        _type_: _description_
+    Args:\n
+        user_id: uuid of User that you want to retrieve.\n
+        session - (AsyncSession) Depends(get_async_session).\n
+        extention - UserExtUpdate shema\n
+        
+        
+    #### Please read schema for understanding JSON schema
     """
     try:
-        # retrieved instance by user_id
-        # retr_statement = select(UserExtension).where(UserExtension.id == user_id)
-        # retr_results = await session.execute(retr_statement)
-        # retr_instance = retr_results.scalars().first()
-        # _params = [
-        #     ext.position,
-        #     ext.options,
-        #     ext.birth_date,
-        #     ext.avatar,
-        #     ext.full_name
-        #     ]
-        # _values = [x for x in _params if x != None ]
-        # C H E C K  It
+
         statement = update(
             UserExtension).where(
                 UserExtension.id == user_id).values(
@@ -93,13 +83,12 @@ async def update_user_extension(
                     options=f"{ext.options}",
                     birth_date=f"{ext.birth_date}",
                     avatar=f"{ext.avatar}",
-                    full_name=f"{ext.full_name}",
+
                 )
         session.execute(statement)
         await session.commit()
-            
-    except SQLAlchemyError as e:
-        raise HTTPException(status_code=400,detail=status.HTTP_400_BAD_REQUEST)
+    except SQLAlchemyError as e:                            # later will do e  to logger
+        raise HTTPException(status_code=404,detail=status.HTTP_404_NOT_FOUND)
     return Response(status_code=201, detail=status.HTTP_201_CREATED)
 
 
