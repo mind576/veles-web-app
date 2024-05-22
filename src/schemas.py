@@ -77,12 +77,12 @@ class UserExtCreate(BaseModel):
     
 class UserExtUpdate(BaseModel):
     user_id: uuid.UUID
-    position: str = Field()
-    company: str =Field()
-    options: Optional[dict] = Field()
-    birth_date: Optional[datetime] = Field()
-    avatar: Optional[Union[StrictStr,StrictBytes]] = Field()
-    full_name: str = Field()
+    position: str = Field(default=None)
+    company: str =Field(default=None)
+    options: Optional[dict] = Field(default=None)
+    birth_date: Optional[datetime] = Field(default=None)
+    avatar: Optional[Union[StrictStr,StrictBytes]] = Field(default=None)
+    full_name: str = Field(default=None)
     
     
     
