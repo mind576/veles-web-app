@@ -11,7 +11,7 @@ from src.schemas import UserExtCreate, UserExtRead, UserUpdate,UserExtUpdate
 import uuid
 from sqlalchemy import select, update
 from starlette import status
-    
+from datetime import  datetime
 
 
 
@@ -39,18 +39,19 @@ async def create_user_extension(
     """
     try:
         new_extention = UserExtension(
-            user_id = current_active_user.id,
-            position = ext.position,
-            company= ext.position,
-            options = ext.options,
-            birth_date = ext.birth_date,
+            user_id = user.id,
+            profession = ext.profession,
+            company= ext.company,
+            options_dict = ext.options_dict,
+            birth_date = f'{ext.birth_date}',
             avatar = ext.avatar
         ) 
         session.add(new_extention)
         await session.commit()
+        return Response(status_code=201,detail=status.HTTP_201_CREATED)
     except SQLAlchemyError as e:
         return HTTPException(status_code=400,detail=status.HTTP_400_BAD_REQUEST)
-    return Response(status_code=201, detail=status.HTTP_201_CREATED)
+    # return Response(status_code=201, detail=status.HTTP_201_CREATED)
 
 
 @ext_router.put("/update/{user_id}",tags=['Update UserExtension Method'])
@@ -79,8 +80,8 @@ async def update_user_extension(
         statement = update(
             UserExtension).where(
                 UserExtension.id == user_id).values(
-                    position=f"{ext.position}",
-                    options=f"{ext.options}",
+                    profession=f"{ext.profession}",
+                    options_dict=f"{ext.options_dict}",
                     birth_date=f"{ext.birth_date}",
                     avatar=f"{ext.avatar}",
 

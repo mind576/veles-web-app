@@ -41,9 +41,9 @@ class UserExtension(Base):
     __tablename__ = 'user_extension'
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users_table.id"))
-    position: Mapped[Optional[str]] = mapped_column(String)
-    company: Mapped[int] = mapped_column(ForeignKey("company_table.id"))
-    options: Mapped[Optional[dict]] = mapped_column(JSON)
+    profession: Mapped[Optional[str]] = mapped_column(String)
+    company: Mapped[int] = mapped_column(ForeignKey("company_table.id"),nullable=True)
+    options_dict: Mapped[Optional[dict]] = mapped_column(JSON)
     birth_date: Mapped[date.fromisoformat] = mapped_column(Date)
     avatar: Mapped[Optional[bytes]] = mapped_column(LargeBinary)
     def __repr__(self):
@@ -66,7 +66,7 @@ class Company(Base):
     email: Mapped[Optional[str]] = mapped_column(String)
     address: Mapped[Optional[str]] = mapped_column(String)
     location: Mapped[Optional[str]] = mapped_column(String)
-    options: Mapped[Optional[dict]] = mapped_column(JSON)
+    options_dict: Mapped[Optional[dict]] = mapped_column(JSON)
     credentials: Mapped[Optional[dict]] = mapped_column(JSON)
     company_logo: Mapped[Optional[bytes]] = mapped_column(LargeBinary)
     def __repr__(self):

@@ -57,9 +57,9 @@ class UserUpdate(schemas.BaseUserUpdate):
     
 class UserExtRead(BaseModel):
     user_id: int
-    position: str
+    profession: str
     company: str
-    options: dict
+    options_dict: dict
     birth_date: bytes
     avatar: str
     
@@ -67,10 +67,10 @@ class UserExtRead(BaseModel):
 
 class UserExtCreate(BaseModel):
     user_id: int
-    position: str = Field()
+    profession: str = Field()
     company: str =Field()
-    options: Optional[dict] = Field()
-    birth_date: Optional[datetime] = Field()
+    options_dict: Optional[dict] = Field()
+    birth_date: Optional[str] = Field()
     avatar: Optional[Union[StrictStr,StrictBytes]] = Field()
     
     
@@ -78,9 +78,9 @@ class UserExtCreate(BaseModel):
     
 class UserExtUpdate(BaseModel):
     user_id: int
-    position: str = Field(default=None)
+    profession: str = Field(default=None)
     company: str =Field(default=None)
-    options: Optional[dict] = Field(default=None)
+    options_dict: Optional[dict] = Field(default=None)
     birth_date: Optional[datetime] = Field(default=None)
     avatar: Optional[Union[StrictStr,StrictBytes]] = Field(default=None)
     
@@ -94,7 +94,7 @@ class CompanyCreate(BaseModel):
     email: Optional[EmailStr] = Field()
     address: Optional[str] = Field()
     location: Optional[str] = Field()
-    options: Optional[dict] = Field()
+    options_dict: Optional[dict] = Field()
     credentials: Optional[dict] = Field()
     company_logo: Optional[Union[StrictStr,StrictBytes]] = Field()
     
@@ -103,7 +103,7 @@ class CompanyUpdate(BaseModel):
     email: Optional[EmailStr] = Field()
     address: Optional[str] = Field()
     location: Optional[str] = Field()
-    options: Optional[dict] = Field()
+    options_dict: Optional[dict] = Field()
     credentials: Optional[dict] = Field()
     company_logo: Optional[Union[StrictStr,StrictBytes]] = Field()
     
@@ -115,6 +115,6 @@ class CompanyRead(BaseModel):
     email: EmailStr
     address: str
     location: str
-    options: dict
+    options_dict: dict
     credentials: dict
     company_logo: Union[StrictStr,StrictBytes]
