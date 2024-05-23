@@ -1,8 +1,8 @@
 import uuid
-from typing import Optional,Union
-from datetime import datetime,date
+from typing import Optional,Union,AnyStr,Any
+from datetime import datetime
 from fastapi_users import schemas
-from pydantic import field_validator
+from pydantic import field_validator, Json,Field
 
 from pydantic import (
     ValidationInfo,
@@ -11,13 +11,14 @@ from pydantic import (
     Field,
     StrictBytes,
     StrictStr,
-    ByteSize,
     EmailStr,
-    FilePath
 )
 
 
 current_time = datetime.now()
+
+
+
 
 # Base User
 class UserRead(schemas.BaseUser[int]):
@@ -42,6 +43,7 @@ class UserCreate(schemas.BaseUserCreate):
 
 class UserUpdate(schemas.BaseUserUpdate):
     phone_number: str
+    full_name: str
     @field_validator('phone_number')
     @classmethod
     def check_numeric(cls, v: str, info: ValidationInfo) -> str:
@@ -58,7 +60,6 @@ class UserUpdate(schemas.BaseUserUpdate):
 class UserExtRead(BaseModel):
     user_id: int
     profession: str
-    company: str
     options_dict: dict
     birth_date: bytes
     avatar: str
@@ -66,27 +67,24 @@ class UserExtRead(BaseModel):
 
 
 class UserExtCreate(BaseModel):
-    user_id: int
     profession: str = Field()
-    company: str =Field()
-    options_dict: Optional[dict] = Field()
+    options_dict: Optional[Json] = Field()
     birth_date: Optional[str] = Field()
-    avatar: Optional[Union[StrictStr,StrictBytes]] = Field()
+    avatar: Optional[Union[AnyStr]] = Field(default=Any)
     
     
 
     
 class UserExtUpdate(BaseModel):
-    user_id: int
     profession: str = Field(default=None)
-    company: str =Field(default=None)
-    options_dict: Optional[dict] = Field(default=None)
-    birth_date: Optional[datetime] = Field(default=None)
-    avatar: Optional[Union[StrictStr,StrictBytes]] = Field(default=None)
+    options_dict: Optional[Json] = Field()
+    birth_date: Optional[str] = Field()
+    avatar: Optional[Union[AnyStr]] = Field(default=Any)
     
     
     
-    
+class Test(BaseModel):
+    js: Json= Field()
     
 # Company Schemas
 class CompanyCreate(BaseModel):

@@ -51,8 +51,17 @@ app.include_router(
 
 
 @app.get("/authenticated-route",tags=['Hello World Method'])
-async def authenticated_route(user: User = Depends(current_active_user)):
-    return {"message": f"Hello {user.email}!"}
+async def authenticated_route(command:str = None):
+    """Dev usage cludge"""
+    if command:
+        match command:
+            case "create_all":
+                async with engine.begin() as conn:
+                    await conn.run_sync(Base.metadata.create_all)
+            case "drop_all":
+                async with engine.begin() as conn:
+                    await conn.run_sync(Base.metadata.drop_all)
+    return {"message": f"Hello Word!" }
 
 
 import importlib

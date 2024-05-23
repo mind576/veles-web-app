@@ -41,11 +41,10 @@ class UserExtension(Base):
     __tablename__ = 'user_extension'
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users_table.id"))
-    profession: Mapped[Optional[str]] = mapped_column(String)
-    company: Mapped[int] = mapped_column(ForeignKey("company_table.id"),nullable=True)
-    options_dict: Mapped[Optional[dict]] = mapped_column(JSONB)
-    birth_date: Mapped[date.fromisoformat] = mapped_column(Date)
-    avatar: Mapped[Optional[bytes]] = mapped_column(LargeBinary)
+    profession: Mapped[Optional[str]] = mapped_column(String,nullable=True)
+    options_dict: Mapped[Optional[dict]] = mapped_column(JSONB,nullable=True)
+    birth_date: Mapped[date.fromisoformat] = mapped_column(Date,nullable=True)
+    avatar: Mapped[Optional[bytes]] = mapped_column(LargeBinary,nullable=True)
     def __repr__(self):
         return f"UserExtension_users_id={self.user_id}   company_name={self.company} "
     
@@ -66,8 +65,8 @@ class Company(Base):
     email: Mapped[Optional[str]] = mapped_column(String)
     address: Mapped[Optional[str]] = mapped_column(String)
     location: Mapped[Optional[str]] = mapped_column(String)
-    options_dict: Mapped[Optional[dict]] = mapped_column(JSONB)
-    credentials: Mapped[Optional[dict]] = mapped_column(JSONB)
-    company_logo: Mapped[Optional[bytes]] = mapped_column(LargeBinary)
+    options_dict: Mapped[Optional[dict]] = mapped_column(JSONB,nullable=True)
+    credentials: Mapped[Optional[dict]] = mapped_column(JSONB,nullable=True)
+    company_logo: Mapped[Optional[bytes]] = mapped_column(LargeBinary,nullable=True)
     def __repr__(self):
         return f"Company Name={self.user_id} company_id={self.id}"
