@@ -3,9 +3,9 @@ from sqlalchemy.orm import Mapped, mapped_column
 from fastapi_users.db import SQLAlchemyBaseUserTable
 from settings import *
 from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
-from sqlalchemy import String, Date, ForeignKey,JSON, LargeBinary,Integer,Boolean
+from sqlalchemy import String, Date, ForeignKey,LargeBinary,Integer,Boolean
 from datetime import date
-from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy.dialects.postgresql import ARRAY, JSONB
 import uuid
 
 
@@ -43,7 +43,7 @@ class UserExtension(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("users_table.id"))
     profession: Mapped[Optional[str]] = mapped_column(String)
     company: Mapped[int] = mapped_column(ForeignKey("company_table.id"),nullable=True)
-    options_dict: Mapped[Optional[dict]] = mapped_column(JSON)
+    options_dict: Mapped[Optional[dict]] = mapped_column(JSONB)
     birth_date: Mapped[date.fromisoformat] = mapped_column(Date)
     avatar: Mapped[Optional[bytes]] = mapped_column(LargeBinary)
     def __repr__(self):
@@ -66,8 +66,8 @@ class Company(Base):
     email: Mapped[Optional[str]] = mapped_column(String)
     address: Mapped[Optional[str]] = mapped_column(String)
     location: Mapped[Optional[str]] = mapped_column(String)
-    options_dict: Mapped[Optional[dict]] = mapped_column(JSON)
-    credentials: Mapped[Optional[dict]] = mapped_column(JSON)
+    options_dict: Mapped[Optional[dict]] = mapped_column(JSONB)
+    credentials: Mapped[Optional[dict]] = mapped_column(JSONB)
     company_logo: Mapped[Optional[bytes]] = mapped_column(LargeBinary)
     def __repr__(self):
         return f"Company Name={self.user_id} company_id={self.id}"
