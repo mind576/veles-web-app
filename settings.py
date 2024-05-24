@@ -17,8 +17,7 @@ elif config['POSTGRES_DOCKER_BUILD'] == 'False':
     PG_DOCKER_RUN_DEV_MODE = config['DEV_DOKER_POSTGRES_CMD']
     PG_HOST = config["POSTGRES_HOST_LOCAL"]
 
-    # os.system(PG_DOCKER_RUN_DEV_MODE)             # DEV_DOKER_POSTGRES_CMD='docker run --name db_postgres  -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -d postgres:latest'
-
+    # os.system(PG_DOCKER_RUN_DEV_MODE)            
     # time.sleep(10)
     # os.system(f'echo "Service is run on {PG_HOST}"')
 

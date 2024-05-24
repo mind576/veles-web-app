@@ -61,12 +61,13 @@ async def authenticated_route(command:str = None):
             case "drop_all":
                 async with engine.begin() as conn:
                     await conn.run_sync(Base.metadata.drop_all)
+                    
     return {"message": f"Hello Word!" }
 
 
-import importlib
-@app.on_event("startup")
-async def on_startup():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-        # await conn.run_sync(Base.metadata.drop_all)
+# import importlib
+# @app.on_event("startup")
+# async def on_startup():
+#     async with engine.begin() as conn:
+#         # await conn.run_sync(Base.metadata.drop_all)
+#         await conn.run_sync(Base.metadata.create_all)

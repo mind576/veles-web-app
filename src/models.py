@@ -42,9 +42,7 @@ class UserExtension(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users_table.id"))
     profession: Mapped[Optional[str]] = mapped_column(String,nullable=True)
-    options_dict: Mapped[Optional[dict]] = mapped_column(JSONB,nullable=True)
     birth_date: Mapped[date.fromisoformat] = mapped_column(Date,nullable=True)
-    avatar: Mapped[Optional[bytes]] = mapped_column(LargeBinary,nullable=True)
     def __repr__(self):
         return f"UserExtension_users_id={self.user_id}   company_name={self.company} "
     
@@ -61,12 +59,9 @@ class Company(Base):
     __tablename__ = 'company_table'
     id: Mapped[int] = mapped_column(primary_key=True)
     company_name: Mapped[Optional[str]] = mapped_column(String)
-    director: Mapped[Optional[int]] = mapped_column(ForeignKey("users_table.id")) # How many directors may run business ??
+    director: Mapped[Optional[int]] = mapped_column(ForeignKey("users_table.id"),nullable=True) # How many directors may run business ??
     email: Mapped[Optional[str]] = mapped_column(String)
     address: Mapped[Optional[str]] = mapped_column(String)
     location: Mapped[Optional[str]] = mapped_column(String)
-    options_dict: Mapped[Optional[dict]] = mapped_column(JSONB,nullable=True)
-    credentials: Mapped[Optional[dict]] = mapped_column(JSONB,nullable=True)
-    company_logo: Mapped[Optional[bytes]] = mapped_column(LargeBinary,nullable=True)
     def __repr__(self):
         return f"Company Name={self.user_id} company_id={self.id}"

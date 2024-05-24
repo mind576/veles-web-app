@@ -9,7 +9,7 @@ from src.users import current_active_user
 from src.db import AsyncSession, get_async_session
 from src.schemas import UserExtCreate, UserExtRead, UserUpdate,UserExtUpdate
 import uuid
-from sqlalchemy import select, update,insert
+from sqlalchemy import select, update,insert,text
 from starlette import status
 from datetime import  datetime
 
@@ -38,15 +38,9 @@ async def create_user_extension(
     #### Please read schema for understanding JSON schema
     """
     try:
-        statement = (insert(UserExtension).values(
-            user_id=user.id, 
-            profession=f'{ext.profession}',
-            company=f'{ext.company}',
-            options_dict=f'{ext.options_dict}',
-            birth_date=f'{ext.birth_date}',
-            avatar=f'{ext.vatar}'
-            ))
-        session.execute(statement=statement)
+        
+        session.execute(
+            text(f"INSERT INTO user_extension (user_id, profession, birt_date) VALUES ({user.id},'{ext.profession}',{ext.birth_date})"))
         await session.commit()
         return Response(status_code=201,detail=status.HTTP_201_CREATED)
     except SQLAlchemyError as e:
@@ -81,9 +75,7 @@ async def update_user_extension(
             UserExtension).where(
                 UserExtension.id == user_id).values(
                     profession=f"{ext.profession}",
-                    options_dict=f"'{ext.options_dict}'",
                     birth_date=f"{ext.birth_date}",
-                    avatar=f"{ext.avatar}",
 
                 )
         session.execute(statement)
