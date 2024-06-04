@@ -63,5 +63,16 @@ class Company(Base):
     email: Mapped[Optional[str]] = mapped_column(String)
     address: Mapped[Optional[str]] = mapped_column(String)
     location: Mapped[Optional[str]] = mapped_column(String)
+    company_info: Mapped[Optional[str]] = mapped_column(String)
+    type_contragent: Mapped[Optional[str]] = mapped_column(String)
+    legal_company_name: Mapped[Optional[str]] = mapped_column(String)
+    inn_num: Mapped[Optional[str]] = mapped_column(String)
+    kpp_num: Mapped[Optional[str]] = mapped_column(String)
+    ogrn_num: Mapped[Optional[str]] = mapped_column(String)
+    okpo_num: Mapped[Optional[str]] = mapped_column(String)
+    bik_num: Mapped[Optional[str]] = mapped_column(String)
+    bank_name: Mapped[Optional[str]] = mapped_column(String)
+    bank_address: Mapped[Optional[str]] = mapped_column(String)
+    correspondent_account: Mapped[Optional[str]] = mapped_column(String)
     def __repr__(self):
-        return f"Company Name={self.user_id} company_id={self.id}"
+        return f"Company Name={self.company_name} company_id={self.id}"
