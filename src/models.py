@@ -20,9 +20,9 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     """
     __tablename__ = 'users_table'
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    full_name: Mapped[str] = mapped_column(String,nullable=False)
+    fullName: Mapped[str] = mapped_column(String,nullable=False)
     email: Mapped[str] = mapped_column(String, nullable=False)
-    phone_number: Mapped[str] = mapped_column(String, nullable=False)
+    phone: Mapped[str] = mapped_column(String, nullable=False)
     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=True, default=True)
     is_superuser: Mapped[bool] = mapped_column(Boolean, nullable=True, default=False)
@@ -42,7 +42,7 @@ class UserExtension(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users_table.id"))
     profession: Mapped[Optional[str]] = mapped_column(String,nullable=True)
-    birth_date: Mapped[date.fromisoformat] = mapped_column(Date,nullable=True)
+    birthDate: Mapped[date.fromisoformat] = mapped_column(Date,nullable=True)
     def __repr__(self):
         return f"UserExtension_users_id={self.user_id}   company_name={self.company} "
     
@@ -58,21 +58,22 @@ class Company(Base):
     """
     __tablename__ = 'company_table'
     id: Mapped[int] = mapped_column(primary_key=True)
-    company_name: Mapped[Optional[str]] = mapped_column(String)
+    name: Mapped[Optional[str]] = mapped_column(String)
     director: Mapped[Optional[int]] = mapped_column(ForeignKey("users_table.id"),nullable=True) # How many directors may run business ??
+    phone: Mapped[str] = mapped_column(String, nullable=False)
     email: Mapped[Optional[str]] = mapped_column(String)
     address: Mapped[Optional[str]] = mapped_column(String)
     location: Mapped[Optional[str]] = mapped_column(String)
-    company_info: Mapped[Optional[str]] = mapped_column(String)
-    type_contragent: Mapped[Optional[str]] = mapped_column(String)
-    legal_company_name: Mapped[Optional[str]] = mapped_column(String)
-    inn_num: Mapped[Optional[str]] = mapped_column(String)
-    kpp_num: Mapped[Optional[str]] = mapped_column(String)
-    ogrn_num: Mapped[Optional[str]] = mapped_column(String)
-    okpo_num: Mapped[Optional[str]] = mapped_column(String)
-    bik_num: Mapped[Optional[str]] = mapped_column(String)
-    bank_name: Mapped[Optional[str]] = mapped_column(String)
-    bank_address: Mapped[Optional[str]] = mapped_column(String)
-    correspondent_account: Mapped[Optional[str]] = mapped_column(String)
+    info: Mapped[Optional[str]] = mapped_column(String)
+    type: Mapped[Optional[str]] = mapped_column(String)
+    nameLegal: Mapped[Optional[str]] = mapped_column(String)
+    INN: Mapped[Optional[str]] = mapped_column(String)
+    KPP: Mapped[Optional[str]] = mapped_column(String)
+    OGRN: Mapped[Optional[str]] = mapped_column(String)
+    OKPO: Mapped[Optional[str]] = mapped_column(String)
+    BIK: Mapped[Optional[str]] = mapped_column(String)
+    BankName: Mapped[Optional[str]] = mapped_column(String)
+    BankAddrss: Mapped[Optional[str]] = mapped_column(String)
+    corrAccount: Mapped[Optional[str]] = mapped_column(String)
     def __repr__(self):
-        return f"Company Name={self.company_name} company_id={self.id}"
+        return f"Company Name={self.name} company_id={self.id}"
