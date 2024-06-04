@@ -21,30 +21,34 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     __tablename__ = 'users_table'
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     fullName: Mapped[str] = mapped_column(String,nullable=False)
-    email: Mapped[str] = mapped_column(String, nullable=False)
-    phone: Mapped[str] = mapped_column(String, nullable=False)
+    email: Mapped[str] = mapped_column(String, unique=True,nullable=False)
+    phone: Mapped[str] = mapped_column(String,unique=True, nullable=False)
+    picture: Mapped[str] = mapped_column(String)
+    birthDate: Mapped[str] = mapped_column(Date,nullable=True)
     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
-    is_active: Mapped[bool] = mapped_column(Boolean, nullable=True, default=True)
-    is_superuser: Mapped[bool] = mapped_column(Boolean, nullable=True, default=False)
-    is_verified: Mapped[bool] = mapped_column(Boolean, nullable=True, default=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    is_superuser: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_verified: Mapped[bool] = mapped_column(Boolean, default=False)
 
     def __repr__(self):
-        return f"User= {self.full_name} {self.id} "
+        return f" id={self.id} name= {self.fullName} "
 
 
 
-class UserExtension(Base):
+class Employee(Base):
     """ User Extension ORM model:\n
-    This model extends class User and helps to store additional data fields .
+    This model extends class User and helps to store additional data fields for storing Workers data  .
 
     """
-    __tablename__ = 'user_extension'
+    __tablename__ = 'employee'
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users_table.id"))
-    profession: Mapped[Optional[str]] = mapped_column(String,nullable=True)
-    birthDate: Mapped[date.fromisoformat] = mapped_column(Date,nullable=True)
+    position: Mapped[Optional[str]] = mapped_column(String,nullable=True)
+    obligations: Mapped[str] = mapped_column(String,nullable=True)
+    type: Mapped[str] = mapped_column(String,nullable=True)
+    
     def __repr__(self):
-        return f"UserExtension_users_id={self.user_id}   company_name={self.company} "
+        return f"Employee_id={self.user_id}   position={self.position} "
     
     
     

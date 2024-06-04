@@ -3,23 +3,23 @@ from fastapi import APIRouter, Depends, HTTPException, Response
 from src.users import fastapi_users
 from src.users import *
 from sqlalchemy.exc import SQLAlchemyError
-from src.models import User, UserExtension
+from src.models import User, Employee
 from starlette import status
 from src.users import current_active_user
 from src.db import AsyncSession, get_async_session
-from src.schemas import UserExtCreate, UserExtRead, UserUpdate,UserExtUpdate
+from src.schemas import UserExtCreate, EmployeeRead, EmployeeUpdate,EmployeeUpdate
 import uuid
-from sqlalchemy import select, update,insert,text
+from sqlalchemy import select, update, insert, text
 from starlette import status
 from datetime import  datetime
 
 
 
-ext_router = APIRouter(prefix="/ext",
+ext_router = APIRouter(prefix="/employee",
 )
 
-@ext_router.post("/add",tags=['Create UserExtension Method'])
-async def create_user_extension(
+@ext_router.post("/add",tags=['Employee Method'])
+async def create_employee(
     ext: UserExtCreate,
     user: User = Depends(current_active_user),
     session: AsyncSession = Depends(get_async_session),
@@ -40,18 +40,18 @@ async def create_user_extension(
     try:
         
         session.execute(
-            text(f"INSERT INTO user_extension (user_id, profession, birt_date) VALUES ({user.id},'{ext.profession}',{ext.birth_date})"))
+            text(f"INSERT INTO employee (user_id, position, obligations ) VALUES ({user.id},'{ext.position}',{ext.obligations})"))
         await session.commit()
         return Response(status_code=201,detail=status.HTTP_201_CREATED)
     except SQLAlchemyError as e:
-        return HTTPException(status_code=400,detail=status.HTTP_400_BAD_REQUEST)
+        return HTTPException(status_code=400, detail=status.HTTP_400_BAD_REQUEST)
 
 
 
-@ext_router.put("/update/{user_id}",tags=['Update UserExtension Method'])
-async def update_user_extension(
+@ext_router.put("/update/{user_id}",tags=['Update Employee Method'])
+async def update_emloyee(
     user_id: uuid.UUID,
-    ext: UserExtUpdate,
+    ext: EmployeeUpdate,
     user: User = Depends(current_active_user),
     session: AsyncSession = Depends(get_async_session),
     ):
@@ -72,10 +72,10 @@ async def update_user_extension(
     try:
 
         statement = update(
-            UserExtension).where(
-                UserExtension.id == user_id).values(
-                    profession=f"{ext.profession}",
-                    birth_date=f"{ext.birth_date}",
+            Employee).where(
+                Employee.id == user_id).values(
+                    position=f"{ext.position}",
+                    obligations=f"{ext.obligations}",
 
                 )
         session.execute(statement)
@@ -86,7 +86,7 @@ async def update_user_extension(
 
 
 
-
+# Unfinished
 @ext_router.get("/get")
 async def get_extension_uuiid(
     user_uuid: uuid.UUID,

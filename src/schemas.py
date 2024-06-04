@@ -55,24 +55,25 @@ class UserUpdate(schemas.BaseUserUpdate):
     
     
     
-class UserExtRead(BaseModel):
+class EmployeeRead(BaseModel):
     user_id: int
-    profession: str
-    birth_date: bytes
+    position: str
+    obligations: bytes
 
     
 
 
-class UserExtCreate(BaseModel):
-    profession: str = Field()
-    birth_date: Optional[str] = Field()
+class EmployeeCreate(BaseModel):
+    position: str = Field()
+    obligations: Optional[str] = Field()
     
     
 
     
-class UserExtUpdate(BaseModel):
-    profession: str = Field(default=None)
-    birth_date: Optional[str] = Field()
+class EmployeeUpdate(BaseModel):
+    position: str = Field()
+    obligations: Optional[str] = Field()
+    
 
     
     

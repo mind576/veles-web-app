@@ -1,9 +1,9 @@
 from fastapi import Depends, FastAPI
-from src.models import User
+from src.models import User, Employee
 from src.db import create_db_and_tables
 from src.schemas import UserCreate, UserRead, UserUpdate
 from src.users import auth_backend, current_active_user, fastapi_users
-from src.extusr import ext_router as user_extender_router
+from src.employee import ext_router as user_extender_router
 from src.cmp import cmp_router as company_router
 from settings import config
 from src.db import Base 
