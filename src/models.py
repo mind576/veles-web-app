@@ -45,10 +45,10 @@ class Employee(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("users_table.id"))
     position: Mapped[Optional[str]] = mapped_column(String,nullable=True)
     obligations: Mapped[str] = mapped_column(String,nullable=True)
-    type: Mapped[str] = mapped_column(String,nullable=True)
+
     
     def __repr__(self):
-        return f"Employee_id={self.user_id}   position={self.position} "
+        return f"Employee_id={self.user_id}   position={self.position}"
     
     
     

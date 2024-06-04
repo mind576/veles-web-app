@@ -16,18 +16,34 @@ from pydantic import (
 current_time = datetime.now()
 
 
+# id: Mapped[int] = mapped_column(Integer, primary_key=True)
+#     fullName: Mapped[str] = mapped_column(String,nullable=False)
+#     email: Mapped[str] = mapped_column(String, unique=True,nullable=False)
+#     phone: Mapped[str] = mapped_column(String,unique=True, nullable=False)
+#     picture: Mapped[str] = mapped_column(String)
+#     birthDate: Mapped[str] = mapped_column(Date,nullable=True)
+#     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
+#     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+#     is_superuser: Mapped[bool] = mapped_column(Boolean, default=False)
+#     is_verified: Mapped[bool] = mapped_column(Boolean, default=False)
 
 
 # Base User
 class UserRead(schemas.BaseUser[int]):
-    full_name: str
-    phone_number: str
+    fullName: str
+    email: str
+    phone: str
+    picture: str
+    birthDate: str
 
 
 class UserCreate(schemas.BaseUserCreate):
-    full_name: str
-    phone_number: str 
-    @field_validator('phone_number')
+    fullName: str
+    email: str
+    phone: str
+    picture: str
+    birthDate: str
+    @field_validator('phone')
     @classmethod
     def check_numeric(cls, v: str, info: ValidationInfo) -> str:
         if isinstance(v, str):
@@ -40,9 +56,12 @@ class UserCreate(schemas.BaseUserCreate):
 
 
 class UserUpdate(schemas.BaseUserUpdate):
-    phone_number: str
-    full_name: str
-    @field_validator('phone_number')
+    fullName: str
+    email: str
+    phone: str
+    picture: str
+    birthDate: str
+    @field_validator('phone')
     @classmethod
     def check_numeric(cls, v: str, info: ValidationInfo) -> str:
         if isinstance(v, str):

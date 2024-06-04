@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from src.users import fastapi_users
 from src.users import *
-from src.models import User, UserExtension
+from src.models import User, Employee
 from starlette import status
 from src.users import current_active_user
 

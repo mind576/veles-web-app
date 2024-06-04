@@ -7,7 +7,7 @@ from src.models import User, Employee
 from starlette import status
 from src.users import current_active_user
 from src.db import AsyncSession, get_async_session
-from src.schemas import UserExtCreate, EmployeeRead, EmployeeUpdate,EmployeeUpdate
+from src.schemas import EmployeeRead, EmployeeUpdate,EmployeeCreate
 import uuid
 from sqlalchemy import select, update, insert, text
 from starlette import status
@@ -20,7 +20,7 @@ ext_router = APIRouter(prefix="/employee",
 
 @ext_router.post("/add",tags=['Employee Method'])
 async def create_employee(
-    ext: UserExtCreate,
+    ext: EmployeeCreate,
     user: User = Depends(current_active_user),
     session: AsyncSession = Depends(get_async_session),
     ):
