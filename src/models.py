@@ -1,9 +1,9 @@
 from typing import Optional
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column 
 from fastapi_users.db import SQLAlchemyBaseUserTable
 from settings import *
 from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
-from sqlalchemy import String, Date, ForeignKey,LargeBinary,Integer,Boolean
+from sqlalchemy import String, Date, ForeignKey,LargeBinary,Integer,Boolean, DateTime
 from datetime import date
 from sqlalchemy.dialects.postgresql import ARRAY, JSONB
 import uuid
@@ -24,7 +24,7 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     email: Mapped[str] = mapped_column(String, unique=True,nullable=False)
     phone: Mapped[str] = mapped_column(String,unique=True, nullable=False)
     picture: Mapped[str] = mapped_column(String)
-    birthDate: Mapped[str] = mapped_column(Date,nullable=True)
+    birthDate: Mapped[date] = mapped_column(DateTime,nullable=True)
     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     is_superuser: Mapped[bool] = mapped_column(Boolean, default=False)

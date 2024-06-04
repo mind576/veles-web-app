@@ -1,6 +1,6 @@
 import uuid
 from typing import Optional,Union,AnyStr,Any
-from datetime import datetime
+from datetime import datetime, date
 from fastapi_users import schemas
 from pydantic import field_validator,Field
 
@@ -38,11 +38,11 @@ class UserRead(schemas.BaseUser[int]):
 
 
 class UserCreate(schemas.BaseUserCreate):
-    fullName: str
-    email: str
-    phone: str
-    picture: str
-    birthDate: str
+    fullName: str = Field()
+    email: str = Field()
+    phone: str = Field()
+    picture: str = Field(default=None)
+    birthDate: date = Field(default=None)
     @field_validator('phone')
     @classmethod
     def check_numeric(cls, v: str, info: ValidationInfo) -> str:
@@ -56,11 +56,11 @@ class UserCreate(schemas.BaseUserCreate):
 
 
 class UserUpdate(schemas.BaseUserUpdate):
-    fullName: str
-    email: str
+    fullName: str = Field()
+    email: str = Field()
     phone: str
     picture: str
-    birthDate: str
+    birthDate: date = Field()
     @field_validator('phone')
     @classmethod
     def check_numeric(cls, v: str, info: ValidationInfo) -> str:
