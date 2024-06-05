@@ -20,11 +20,11 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     """
     __tablename__ = 'users_table'
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    fullName: Mapped[str] = mapped_column(String,nullable=False)
+    full_name: Mapped[str] = mapped_column(String,nullable=False)
     email: Mapped[str] = mapped_column(String, unique=True,nullable=False)
     phone: Mapped[str] = mapped_column(String,unique=True, nullable=False)
     picture: Mapped[str] = mapped_column(String)
-    birthDate: Mapped[date] = mapped_column(DateTime,nullable=True)
+    birth_date: Mapped[date] = mapped_column(DateTime,nullable=True)
     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     is_superuser: Mapped[bool] = mapped_column(Boolean, default=False)
@@ -55,6 +55,7 @@ class Employee(Base):
 class Company(Base):
     """ Company ORM model:
     -- This model helps to store Company item data fields .
+    PEP8 - mixedCase style names
     Args:
         Base (SQLAlchemy Base class): 
     Returns:
@@ -76,8 +77,8 @@ class Company(Base):
     OGRN: Mapped[Optional[str]] = mapped_column(String)
     OKPO: Mapped[Optional[str]] = mapped_column(String)
     BIK: Mapped[Optional[str]] = mapped_column(String)
-    BankName: Mapped[Optional[str]] = mapped_column(String)
-    BankAddrss: Mapped[Optional[str]] = mapped_column(String)
+    bankName: Mapped[Optional[str]] = mapped_column(String)
+    bankAddress: Mapped[Optional[str]] = mapped_column(String)
     corrAccount: Mapped[Optional[str]] = mapped_column(String)
     def __repr__(self):
         return f"Company Name={self.name} company_id={self.id}"
