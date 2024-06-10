@@ -17,11 +17,11 @@ current_time = datetime.now()
 
 
 # id: Mapped[int] = mapped_column(Integer, primary_key=True)
-#     fullName: Mapped[str] = mapped_column(String,nullable=False)
+#     full_name: Mapped[str] = mapped_column(String,nullable=False)
 #     email: Mapped[str] = mapped_column(String, unique=True,nullable=False)
 #     phone: Mapped[str] = mapped_column(String,unique=True, nullable=False)
 #     picture: Mapped[str] = mapped_column(String)
-#     birthDate: Mapped[str] = mapped_column(Date,nullable=True)
+#     birth_date: Mapped[date] = mapped_column(DateTime,nullable=True)
 #     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
 #     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 #     is_superuser: Mapped[bool] = mapped_column(Boolean, default=False)
@@ -30,19 +30,19 @@ current_time = datetime.now()
 
 # Base User
 class UserRead(schemas.BaseUser[int]):
-    fullName: str
+    full_name: str
     email: str
     phone: str
     picture: str
-    birthDate: str
+    birth_date: str
 
 
 class UserCreate(schemas.BaseUserCreate):
-    fullName: str = Field()
+    full_name: str = Field()
     email: str = Field()
     phone: str = Field()
     picture: str = Field(default=None)
-    birthDate: date = Field(default=None)
+    birth_date: date = Field(default=None)
     @field_validator('phone')
     @classmethod
     def check_numeric(cls, v: str, info: ValidationInfo) -> str:
@@ -56,11 +56,11 @@ class UserCreate(schemas.BaseUserCreate):
 
 
 class UserUpdate(schemas.BaseUserUpdate):
-    fullName: str = Field()
+    full_name: str = Field()
     email: str = Field()
     phone: str
     picture: str
-    birthDate: date = Field()
+    birth_date: date = Field()
     @field_validator('phone')
     @classmethod
     def check_numeric(cls, v: str, info: ValidationInfo) -> str:

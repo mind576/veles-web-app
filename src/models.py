@@ -36,7 +36,7 @@ class User(SQLAlchemyBaseUserTable[int], Base):
 
 
 class Employee(Base):
-    """ User Extension ORM model:\n
+    """ Employee ORM that extends User ORM so this data is interchangeable between users exact that time when ser changes working position:\n
     This model extends class User and helps to store additional data fields for storing Workers data  .
 
     """
@@ -71,14 +71,14 @@ class Company(Base):
     location: Mapped[Optional[str]] = mapped_column(String)
     info: Mapped[Optional[str]] = mapped_column(String)
     type: Mapped[Optional[str]] = mapped_column(String)
-    nameLegal: Mapped[Optional[str]] = mapped_column(String)
+    name_legal: Mapped[Optional[str]] = mapped_column(String)
     INN: Mapped[Optional[str]] = mapped_column(String)
     KPP: Mapped[Optional[str]] = mapped_column(String)
     OGRN: Mapped[Optional[str]] = mapped_column(String)
     OKPO: Mapped[Optional[str]] = mapped_column(String)
     BIK: Mapped[Optional[str]] = mapped_column(String)
-    bankName: Mapped[Optional[str]] = mapped_column(String)
-    bankAddress: Mapped[Optional[str]] = mapped_column(String)
-    corrAccount: Mapped[Optional[str]] = mapped_column(String)
+    bank_name: Mapped[Optional[str]] = mapped_column(String)
+    bank_address: Mapped[Optional[str]] = mapped_column(String)
+    corr_account: Mapped[Optional[str]] = mapped_column(String)
     def __repr__(self):
         return f"Company Name={self.name} company_id={self.id}"
