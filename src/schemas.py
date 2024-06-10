@@ -13,7 +13,7 @@ from pydantic import (
 )
 
 
-current_time = datetime.now()
+# current_time = datetime.now()
 
 
 # id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -34,7 +34,7 @@ class UserRead(schemas.BaseUser[int]):
     email: str
     phone: str
     picture: str
-    birth_date: str
+    birth_date: datetime
 
 
 class UserCreate(schemas.BaseUserCreate):
@@ -42,7 +42,7 @@ class UserCreate(schemas.BaseUserCreate):
     email: str = Field()
     phone: str = Field()
     picture: str = Field(default=None)
-    birth_date: date = Field(default=None)
+    birth_date: datetime | None
     @field_validator('phone')
     @classmethod
     def check_numeric(cls, v: str, info: ValidationInfo) -> str:
@@ -58,9 +58,9 @@ class UserCreate(schemas.BaseUserCreate):
 class UserUpdate(schemas.BaseUserUpdate):
     full_name: str = Field()
     email: str = Field()
-    phone: str
-    picture: str
-    birth_date: date = Field()
+    phone: str = Field()
+    picture: str= Field()
+    birth_date: datetime | None
     @field_validator('phone')
     @classmethod
     def check_numeric(cls, v: str, info: ValidationInfo) -> str:
