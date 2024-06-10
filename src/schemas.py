@@ -13,20 +13,6 @@ from pydantic import (
 )
 
 
-# current_time = datetime.now()
-
-
-# id: Mapped[int] = mapped_column(Integer, primary_key=True)
-#     full_name: Mapped[str] = mapped_column(String,nullable=False)
-#     email: Mapped[str] = mapped_column(String, unique=True,nullable=False)
-#     phone: Mapped[str] = mapped_column(String,unique=True, nullable=False)
-#     picture: Mapped[str] = mapped_column(String)
-#     birth_date: Mapped[date] = mapped_column(DateTime,nullable=True)
-#     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
-#     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-#     is_superuser: Mapped[bool] = mapped_column(Boolean, default=False)
-#     is_verified: Mapped[bool] = mapped_column(Boolean, default=False)
-
 
 # Base User
 class UserRead(schemas.BaseUser[int]):
@@ -70,32 +56,19 @@ class UserUpdate(schemas.BaseUserUpdate):
         return v
     
  
-    
-    
-    
-    
 class EmployeeRead(BaseModel):
     user_id: int
     position: str
     obligations: bytes
 
-    
-
-
 class EmployeeCreate(BaseModel):
-    position: str = Field()
-    obligations: Optional[str] = Field()
+    position: Optional[ str ] = Field(default=None)
+    obligations: Optional[ str ] = Field(default=None)
     
-    
-
     
 class EmployeeUpdate(BaseModel):
-    position: str = Field()
-    obligations: Optional[str] = Field()
-    
-
-    
-    
+    position: Optional[str] = Field(default=None)
+    obligations: Optional[str] = Field(default=None)
     
     
 # Company Schemas

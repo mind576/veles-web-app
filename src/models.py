@@ -17,6 +17,7 @@ UUID_ID = uuid.UUID
 class User(SQLAlchemyBaseUserTable[int], Base):
     """
     User table with obvious and visible fields and options.
+    
     """
     __tablename__ = 'users_table'
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -24,7 +25,7 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     email: Mapped[str] = mapped_column(String, unique=True,nullable=False)
     phone: Mapped[str] = mapped_column(String,unique=True, nullable=False)
     picture: Mapped[str] = mapped_column(String)
-    birth_date: Mapped[date] = mapped_column(DateTime,nullable=True)
+    birth_date: Mapped[date] = mapped_column(Date,nullable=True)
     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     is_superuser: Mapped[bool] = mapped_column(Boolean, default=False)
@@ -36,13 +37,14 @@ class User(SQLAlchemyBaseUserTable[int], Base):
 
 
 class Employee(Base):
-    """ Employee ORM that extends User ORM so this data is interchangeable between users exact that time when ser changes working position:\n
-    This model extends class User and helps to store additional data fields for storing Workers data  .
+    """ Employee ORM that extends User ORM so this table data is interchangeable between users exact 
+    that time when User changes working position:\n
+    Helps to store additional info for User which becames as an Employee.
 
     """
     __tablename__ = 'employee'
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users_table.id"))
+    id: Mapped[int] = mapped_column(Integer,primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users_table.id"),unique=True)
     position: Mapped[Optional[str]] = mapped_column(String,nullable=True)
     obligations: Mapped[str] = mapped_column(String,nullable=True)
 
@@ -54,17 +56,16 @@ class Employee(Base):
     
 class Company(Base):
     """ Company ORM model:
-    -- This model helps to store Company item data fields .
-    PEP8 - mixedCase style names
+    -- This model helps to store Company table data fields .
     Args:
         Base (SQLAlchemy Base class): 
     Returns:
         Company ORM Model:
     """
     __tablename__ = 'company_table'
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer,primary_key=True)
     name: Mapped[Optional[str]] = mapped_column(String)
-    director: Mapped[Optional[int]] = mapped_column(ForeignKey("users_table.id"),nullable=True) # How many directors may run business ??
+    director: Mapped[Optional[int]] = mapped_column(ForeignKey("users_table.id"),nullable=True)
     phone: Mapped[str] = mapped_column(String, nullable=False)
     email: Mapped[Optional[str]] = mapped_column(String)
     address: Mapped[Optional[str]] = mapped_column(String)

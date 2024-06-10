@@ -1,11 +1,12 @@
 
 from fastapi import APIRouter, Depends, HTTPException, Response
+from starlette.responses import JSONResponse
 from src.users import fastapi_users
 from src.users import *
 from sqlalchemy.exc import SQLAlchemyError
 from src.models import User, Employee
 from starlette import status
-from src.users import current_active_user
+from src.users import current_active_user,current_superuser
 from src.db import AsyncSession, get_async_session
 from src.schemas import EmployeeRead, EmployeeUpdate,EmployeeCreate
 import uuid
@@ -20,75 +21,85 @@ ext_router = APIRouter(prefix="/employee",
 
 @ext_router.post("/add",tags=['Employee Method'])
 async def create_employee(
-    ext: EmployeeCreate,
-    user: User = Depends(current_active_user),
+    employee: EmployeeCreate,
+    user: User = Depends(current_active_user), # T E M P O R A R Y implementation are current_userlater it should do superuser
+    # user: User = Depends(current_superuser)     
     session: AsyncSession = Depends(get_async_session),
     ):
     """
-    ### Async method that creates UserExtention item to database:\n
-    UserExtention are linked with User by ForeinKey parameter so it extends
+    ### Async method that creates Employee to database:\n
+    Employee are linked with User by ForeinKey parameter so it extends
     basic User Model and gives additional fields to User.\n
-   
-    
     Args:\n
-        active user - Depends(current_active_user).\n
+        user - Depends(current_superuser).\n
+        * only superuser may create employee
         session - (AsyncSession) Depends(get_async_session).\n
-        extention - UserExtCreate shema\n
-        
-    #### Please read schema for understanding JSON schema
+        employee - Employee schema\n
+    #### *Only superuser my change and create Employee    
+    ##### Please read schema for understanding JSON schema
     """
     try:
-        
-        session.execute(
-            text(f"INSERT INTO employee (user_id, position, obligations ) VALUES ({user.id},'{ext.position}',{ext.obligations})"))
-        await session.commit()
-        return Response(status_code=201,detail=status.HTTP_201_CREATED)
+        if isinstance(employee.position,str):
+            new_employee = Employee(
+            user_id=user.id,
+            position=employee.position,
+            obligations=employee.obligations
+            )
+            session.add(new_employee)
+            await session.commit()
+            return JSONResponse(status_code=status.HTTP_201_CREATED,content={"details":"created"})    
     except SQLAlchemyError as e:
-        return HTTPException(status_code=400, detail=status.HTTP_400_BAD_REQUEST)
+        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=str(e))    
 
 
 
 @ext_router.put("/update/{user_id}",tags=['Update Employee Method'])
 async def update_emloyee(
-    user_id: uuid.UUID,
-    ext: EmployeeUpdate,
-    user: User = Depends(current_active_user),
+    user_id: int,
+    employee: EmployeeUpdate,
+    user: User = Depends(current_active_user), # T E M P O R A R Y - only superuser may update Employee
+    # user: User = Depends(current_superuser)
     session: AsyncSession = Depends(get_async_session),
     ):
     """
-   ### Async method that puts or updates UserExtention item to database:\n
-    UserExtention are linked with User by ForeinKey parameter so extends
+   ### Async method that updates Employee :\n
+    Employee are linked with User by ForeinKey parameter so extends
     basic User Model and gives additional fields to User.\n
-   
-
     Args:\n
-        user_id: uuid of User that you want to retrieve.\n
+        user_id: int of linked User that you want to update.\n
         session - (AsyncSession) Depends(get_async_session).\n
-        extention - UserExtUpdate shema\n
-        
-        
-    #### Please read schema for understanding JSON schema
+        employee - EmployeeUpdate schema\n
+    #### *Only superuser my change and create Employee    
+    ##### Please read schema for understanding JSON schema
     """
     try:
-
-        statement = update(
+        if user:
+            statement = update(
             Employee).where(
-                Employee.id == user_id).values(
-                    position=f"{ext.position}",
-                    obligations=f"{ext.obligations}",
-
+                Employee.user_id == user_id).values(
+                    position=employee.position,
+                    obligations=employee.obligations,
                 )
-        session.execute(statement)
-        await session.commit()
-    except SQLAlchemyError as e:                            # later will do e  to logger
+            await session.execute(statement)
+            await session.commit()
+    except SQLAlchemyError :                            # later will do e  to logger
         raise HTTPException(status_code=404,detail=status.HTTP_404_NOT_FOUND)
-    return Response(status_code=201, detail=status.HTTP_201_CREATED)
+    return Response(status_code=201)
 
 
 
-# Unfinished
-@ext_router.get("/get")
-async def get_extension_uuiid(
-    user_uuid: uuid.UUID,
-    user: User = Depends(current_active_user)):
-    return user
+# Unfinished --- WORK HERE !!!
+# @ext_router.get("/get")
+# async def get_employee_id(
+#     user_id: int,
+#     user: User = Depends(current_active_user),
+#     session: AsyncSession = Depends(get_async_session)
+#     ):
+#     if user_id:
+#         try:
+#             statement = select(Employee).where(Employee.user_id == user_id)
+#             retrieved_employee = await session.execute(statement=statement)
+#             if retrieved_employee:
+#                 return retrieved_employee
+#         except SQLAlchemyError:
+#             raise HTTPException(status_code=404,detail=status.HTTP_404_NOT_FOUND)
