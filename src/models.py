@@ -37,9 +37,12 @@ class User(SQLAlchemyBaseUserTable[int], Base):
 
 
 class Employee(Base):
-    """ Employee ORM that extends User ORM so this table data is interchangeable between users exact 
-    that time when User changes working position:\n
-    Helps to store additional info for User which becames as an Employee.
+    """ Employee ORM that extends User model so it gives additional data to user as employee. Logically \n
+    user may change the employment so someone may substitute user on particular position.\n
+    Exact that time when user is employeed this table gives info about position and obligations.\n
+    When particular user is unemployed he has no Employee table...\n
+    This table are used by user which works in the company on concrete position.
+    #### * I recon this table will get some new fields later ---
 
     """
     __tablename__ = 'employee'
@@ -50,7 +53,7 @@ class Employee(Base):
 
     
     def __repr__(self):
-        return f"Employee_id={self.user_id}   position={self.position}"
+        return f"id={self.user_id}   position={self.position}  obligations={self.obligations}"
     
     
     
