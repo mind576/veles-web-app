@@ -85,4 +85,4 @@ class Company(Base):
     bank_address: Mapped[Optional[str]] = mapped_column(String)
     corr_account: Mapped[Optional[str]] = mapped_column(String)
     def __repr__(self):
-        return f"Company Name={self.name} company_id={self.id}"
+        return f"Company Name={self.name} company_id={self.id} legal={self.name_legal}"

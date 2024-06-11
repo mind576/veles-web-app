@@ -23,7 +23,7 @@ tags_meta = [
     },
 ]
 
-# P R E S E N T A T I O N    D A T A
+# OpenAPI  - P R E S E N T A T I O N    D A T A
 contact_dict = dict(name=config['CONTACT_NAME'],
                     email=config['CONTACT_EMAIL'],
                                   )
