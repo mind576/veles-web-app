@@ -12,8 +12,6 @@ from sqlalchemy import select, update
 from starlette import status
 
 
-
-
 ext_router = APIRouter(prefix="/employee",
 )
 
@@ -25,9 +23,9 @@ async def create_employee(
     session: AsyncSession = Depends(get_async_session),
     ):
     """
-    ### Async method that creates Employee to database:\n
+    ### Async method that creates Employee item:\n
     Employee are linked with User by ForeinKey parameter so it extends
-    basic User Model and gives additional fields to User.\n
+    basic User Model and gives additional fields to User during it's work on a position.\n
     Args:\n
         user - Depends(current_superuser).\n
         * only superuser may create employee
@@ -60,7 +58,7 @@ async def update_emloyee(
     session: AsyncSession = Depends(get_async_session),
     ):
     """
-   ### Async method that updates Employee :\n
+   ### Async method that updates/patches Employee item :\n
     Employee are linked with User by ForeinKey parameter so extends
     basic User Model and gives additional fields to User.\n
     Args:\n
@@ -88,7 +86,7 @@ async def update_emloyee(
 
 
 
-@ext_router.get("/get/{user_id}",response_model=EmployeeRead,tags=['Get Employee By user_id Method'])
+@ext_router.get("/get/{user_id}",response_model=EmployeeRead,tags=['Get Employee item by user_id'])
 async def get_employee_id(
     user_id: int,
     user: User = Depends(current_active_user),
@@ -96,7 +94,7 @@ async def get_employee_id(
     session: AsyncSession = Depends(get_async_session)
     ):
     """
-   ### Async method that retrieves Employee by user_id:int :\n
+   ### Async method that retrieves Employee by user_id int param :\n
     Employee are linked with User by ForeinKey parameter so extends
     basic User Model and gives additional fields to User.\n
     Args:\n

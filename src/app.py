@@ -1,19 +1,33 @@
 from fastapi import  FastAPI
-
-
 from src.schemas import UserCreate, UserRead, UserUpdate
 from src.users import auth_backend,  fastapi_users
 from src.employee import ext_router as user_extender_router
-from src.cmp import cmp_router as company_router
+from src.company import cmp_router as company_router
 from settings import config
 from src.db import Base 
 from src.db import engine
+
+
+tags_meta = [
+    {
+        "name": "Users",
+        "description": "UMA - User management Authentication methods flow. Registration, Authentication, Reset password, etc.",
+    },
+    {
+        "name": "Company",
+        "description": " Company ORM model methods that represents company Item with data fields."
+    },
+    {
+        "name": "Employee",
+        "description": "Employee ORM that extends User model so it gives additional data to user as employee. Logically user may change the employment so someone may substitute user on particular position.When particular user is unemployed he has no Employee table...\nThis table are used by user which works in the company on concrete position."
+    },
+]
 
 # P R E S E N T A T I O N    D A T A
 contact_dict = dict(name=config['CONTACT_NAME'],
                     email=config['CONTACT_EMAIL'],
                                   )
-app = FastAPI(title=config['API_TITLE'],description=config['API_DESCRIPTION'],contact=contact_dict)
+app = FastAPI(title=config['API_TITLE'],description=config['API_DESCRIPTION'],contact=contact_dict,openapi_tags=tags_meta)
 
 # Employee Router - Imported from module employee.py
 app.include_router(
