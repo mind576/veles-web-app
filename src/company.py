@@ -18,7 +18,7 @@ from starlette import status
 current_user = fastapi_users.current_user(active=True)
 
 
-cmp_router = APIRouter(prefix="/business",
+cmp_router = APIRouter(prefix="/company",
     responses={404: {"description": "Not found"}},
 )
 
@@ -47,14 +47,12 @@ async def create_company(
     ):
     """
     ### Async method that creates Company item:\n
-    Employee are linked with User by ForeinKey parameter so it extends
-    basic User Model and gives additional fields to User during it's work on a position.\n
+    Company - are created by registred ***user***, user who creates company is superuser and admin for particular company  .\n
     Args:\n
         user - Depends(current_superuser).\n
-        * only superuser may create employee
         session - (AsyncSession) Depends(get_async_session).\n
-        employee - Employee schema\n
-    #### *Only superuser my change and create Employee    
+        company - CompanyCreate schema\n
+    #### *Only director my change Company data.
     ##### Please read schema for understanding JSON schema
     """
     try:
@@ -71,7 +69,7 @@ async def create_company(
                 name_legal = company.name_legal,
                 INN = company.INN,
                 KPP = company.KPP,
-                OGRN = company.OGRN,
+                OGRN = company.OGRN,                                        # NO SOLVED PUT DATA
                 BIK = company.BIK,
                 bank_name = company.bank_name,
                 bank_address= company.bank_address,
@@ -84,95 +82,82 @@ async def create_company(
         return HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=str(e))    
 
 
-    # id: Mapped[int] = mapped_column(Integer,primary_key=True)
-    # name: Mapped[Optional[str]] = mapped_column(String)
-    # director: Mapped[Optional[int]] = mapped_column(ForeignKey("users_table.id"),nullable=True)
-    # phone: Mapped[str] = mapped_column(String, nullable=False)
-    # email: Mapped[Optional[str]] = mapped_column(String)
-    # address: Mapped[Optional[str]] = mapped_column(String)
-    # location: Mapped[Optional[str]] = mapped_column(String)
-    # info: Mapped[Optional[str]] = mapped_column(String)
-    # type: Mapped[Optional[str]] = mapped_column(String)
-    # name_legal: Mapped[Optional[str]] = mapped_column(String)
-    # INN: Mapped[Optional[str]] = mapped_column(String)
-    # KPP: Mapped[Optional[str]] = mapped_column(String)
-    # OGRN: Mapped[Optional[str]] = mapped_column(String)
-    # OKPO: Mapped[Optional[str]] = mapped_column(String)
-    # BIK: Mapped[Optional[str]] = mapped_column(String)
-    # bank_name: Mapped[Optional[str]] = mapped_column(String)
-    # bank_address: Mapped[Optional[str]] = mapped_column(String)
-    # corr_account: Mapped[Optional[str]] = mapped_column(String)
+
+
+@cmp_router.patch("/update/{company_id}",tags=['Update Company Method'])
+async def update_company(
+    company_id: int,
+    company: CompanyUpdate,
+    user: User = Depends(current_active_user), # T E M P O R A R Y - only superuser may update Employee
+    # user: User = Depends(current_superuser)
+    session: AsyncSession = Depends(get_async_session),
+    ):
+    """
+   ### Async method that updates/patches Company item :\n
+    Company - are created by registred ***user***, user who creates company is superuser and admin for particular company  .\n
+    Args:\n
+        user - Depends(current_superuser).\n
+        session - (AsyncSession) Depends(get_async_session).\n
+        company - CompanyCreate schema\n
+    #### *Only director my change Compay data.  
+    ##### Please read schema for understanding JSON schema
+    """
+    try:
+        if user:
+            statement = update(
+            Company).where(
+                Company.id == company_id).values(
+                    name = company.name,
+                    director = user.id,
+                    phone = company.phone,
+                    email = company.email,
+                    address = company.address,
+                    location = company.location,
+                    info = company.info,
+                    type = company.type,
+                    name_legal = company.name_legal,
+                    INN = company.INN,
+                    KPP = company.KPP,
+                    OGRN = company.OGRN,                                        # Temporary how
+                    BIK = company.BIK,
+                    bank_name = company.bank_name,
+                    bank_address= company.bank_address,
+                    corr_account = company.corr_account,
+                )
+            await session.execute(statement)
+            await session.commit()
+    except SQLAlchemyError as e:                            # <<<< later will do e  to logger
+        raise HTTPException(status_code=404,detail=status.HTTP_404_NOT_FOUND)
+    return Response(status_code=201)
 
 
 
+# DELETE COMPANY
 
+@cmp_router.delete("/delete/{company_id}",tags=['Delete Company Method'])
+async def delete_company(
+    company_id: int,
+    user: User = Depends(current_active_user), # T E M P O R A R Y - only superuser may update Employee
+    # user: User = Depends(current_superuser)
+    session: AsyncSession = Depends(get_async_session),
+    ):
+    """
+   ### Async method that deletes Company item :\n
+    Company - are created by registred ***user***, user who creates company is superuser and admin for particular company  .\n
+    Args:\n
+        user - Depends(current_superuser).\n
+        session - (AsyncSession) Depends(get_async_session).\n
+        company - Company ORM\n
+    #### *Only director my change Compay data.  
+    ##### Please read schema for understanding JSON schema
+    """
+    try:
+        if user and company_id:
+            del_company = await session.get(Company, company_id)
+            if del_company.director == user.id:
+                await session.delete(del_company)
+                await session.commit()
+    except SQLAlchemyError as e:                            # <<<< later will do e  to logger
+        raise HTTPException(status_code=404,detail=status.HTTP_404_NOT_FOUND)
+    return Response(status_code=201)
 
-
-
-
-# @cmp_router.patch("/update/{user_id}",tags=['Update Employee Method'])
-# async def update_emloyee(
-#     user_id: int,
-#     employee: EmployeeUpdate,
-#     user: User = Depends(current_active_user), # T E M P O R A R Y - only superuser may update Employee
-#     # user: User = Depends(current_superuser)
-#     session: AsyncSession = Depends(get_async_session),
-#     ):
-#     """
-#    ### Async method that updates/patches Employee item :\n
-#     Employee are linked with User by ForeinKey parameter so extends
-#     basic User Model and gives additional fields to User.\n
-#     Args:\n
-#         user_id: int of linked User that you want to update.\n
-#         session - (AsyncSession) Depends(get_async_session).\n
-#         employee - EmployeeUpdate schema\n
-#     #### *Only superuser my change and create Employee    
-#     ##### Please read schema for understanding JSON schema
-#     """
-#     try:
-#         if user:
-#             statement = update(
-#             Employee).where(
-#                 Employee.user_id == user_id).values(
-#                     position=employee.position,
-#                     obligations=employee.obligations,
-#                 )
-#             await session.execute(statement)
-#             await session.commit()
-#     except SQLAlchemyError as e:                            # <<<< later will do e  to logger
-#         raise HTTPException(status_code=404,detail=status.HTTP_404_NOT_FOUND)
-#     return Response(status_code=201)
-
-
-
-
-
-# @cmp_router.get("/get/{user_id}",response_model=EmployeeRead,tags=['Get Employee item by user_id'])
-# async def get_employee_id(
-#     user_id: int,
-#     user: User = Depends(current_active_user),
-#     # user: User = Depends(current_superuser)
-#     session: AsyncSession = Depends(get_async_session)
-#     ):
-#     """
-#    ### Async method that retrieves Employee by user_id int param :\n
-#     Employee are linked with User by ForeinKey parameter so extends
-#     basic User Model and gives additional fields to User.\n
-#     Args:\n
-#         user_id: int of linked User that you want to retrieve.\n
-#         session - (AsyncSession) Depends(get_async_session).\n
-#         employee - EmployeeUpdate schema\n
-#     ##### Please read schema for understanding JSON schema
-#     """
-#     if user_id:
-#         try:
-#             statement = select(Employee).where(Employee.user_id == user_id)
-#             result = await session.execute(statement=statement)
-#             retrieved = result.scalar() # retrieved employee item
-#             if retrieved:
-#                 return retrieved # Here is pure scalar object that parses response_model=EmployeeRead
-#             else:
-#                 return JSONResponse(status_code=status.HTTP_404_NOT_FOUND,content={"detail":"item not found"})
-            
-#         except SQLAlchemyError as e:                                            # <<<< later will do e  to logger
-#             raise HTTPException(status_code=404,detail=status.HTTP_404_NOT_FOUND)

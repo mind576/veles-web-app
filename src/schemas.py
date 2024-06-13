@@ -74,7 +74,6 @@ class EmployeeUpdate(BaseModel):
 # Company Schemas
 class CompanyCreate(BaseModel):
     name: Optional[str] = Field()
-    director: Optional[int] = Field()
     phone: Optional[str] = Field()
     email: Optional[EmailStr] = Field()
     address: Optional[str] = Field()
@@ -101,7 +100,6 @@ class CompanyCreate(BaseModel):
     
 class CompanyUpdate(BaseModel):
     name: Optional[str] = Field()
-    director: Optional[int] = Field()
     phone: Optional[str] = Field()
     email: Optional[EmailStr] = Field()
     address: Optional[str] = Field()
@@ -117,6 +115,13 @@ class CompanyUpdate(BaseModel):
     bank_name: Optional[str] = Field()
     bank_address: Optional[str] = Field()
     corr_account: Optional[str] = Field()
+    @field_validator('phone')
+    @classmethod
+    def check_numeric(cls, v: str, info: ValidationInfo) -> str:
+        if isinstance(v, str):
+            is_numeric = v.replace(' ', '').isnumeric()
+            assert is_numeric, f'{info.field_name} phone number must be numeric'
+        return v
 
     
     

@@ -67,8 +67,8 @@ class Company(Base):
     """
     __tablename__ = 'company_table'
     id: Mapped[int] = mapped_column(Integer,primary_key=True)
-    name: Mapped[Optional[str]] = mapped_column(String)
-    director: Mapped[Optional[int]] = mapped_column(ForeignKey("users_table.id"),nullable=True)
+    name: Mapped[Optional[str]] = mapped_column(String,unique=True)
+    director: Mapped[int] = mapped_column(ForeignKey("users_table.id"),nullable=True)
     phone: Mapped[str] = mapped_column(String, nullable=False)
     email: Mapped[Optional[str]] = mapped_column(String)
     address: Mapped[Optional[str]] = mapped_column(String)
@@ -76,7 +76,7 @@ class Company(Base):
     info: Mapped[Optional[str]] = mapped_column(String)
     type: Mapped[Optional[str]] = mapped_column(String)
     name_legal: Mapped[Optional[str]] = mapped_column(String)
-    INN: Mapped[Optional[str]] = mapped_column(String)
+    INN: Mapped[Optional[str]] = mapped_column(String, unique=True)
     KPP: Mapped[Optional[str]] = mapped_column(String)
     OGRN: Mapped[Optional[str]] = mapped_column(String)
     OKPO: Mapped[Optional[str]] = mapped_column(String)

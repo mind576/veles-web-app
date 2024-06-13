@@ -11,15 +11,32 @@ from src.db import engine
 tags_meta = [
     {
         "name": "Users",
-        "description": "UMA - User management Authentication methods flow. Registration, Authentication, Reset password, etc.",
+        "description": "***User Management Authentication[UMA]*** methods flow. Registration, Authentication, Reset password, typical UMA user flow.",
+        "externalDocs": {
+            "description": "Any question?",
+            "url": "https://t.me/EwanPotterman",
+        
+        },
+
     },
     {
         "name": "Company",
-        "description": " Company ORM model methods that represents company Item with data fields."
+        "description": "***Company*** ORM model and it's methods for making CRUD operations. Company - represents company item with data fields.",
+        "externalDocs": {
+            "description": "Any question?",
+            "url": "https://t.me/EwanPotterman",
+        
+        },
+
     },
     {
         "name": "Employee",
-        "description": "Employee ORM that extends User model so it gives additional data to user as employee. Logically user may change the employment so someone may substitute user on particular position.When particular user is unemployed he has no Employee table...\nThis table are used by user which works in the company on concrete position."
+        "description": "***Employee*** Methods for ORM model that extends User model. Employee - gives additional data structure to user that became as employee. Logically user may change the employment position so someone may substitute **user** on particular position. When particular _user_ is unemployed he has no Employee table...\nThis table extends user which works in the company on a position.",
+        "externalDocs": {
+            "description": "Any question?",
+            "url": "https://t.me/EwanPotterman",
+        
+        },
     },
 ]
 
@@ -64,9 +81,17 @@ app.include_router(
 )
 
 
-@app.get("/authenticated-route",tags=['Hello World Method'])
-async def authenticated_route(command:str = None):
-    """Dev usage cludge"""
+@app.get("/drop-create",tags=['Base Migrations Method'])
+async def metadata_route(command:str = None):
+    """Dev usage cludge:
+    For making migrations use this route by writing in command query - create_all | drop_all
+
+    "details":\n
+                {
+                "drop_all": "deletes all tables in database",
+                "create_all": "creates all tables using Metadata object."
+                }
+    """
     if command:
         match command:
             case "create_all":
