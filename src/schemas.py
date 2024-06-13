@@ -13,36 +13,22 @@ from pydantic import (
 )
 
 
-current_time = datetime.now()
-
-
-# id: Mapped[int] = mapped_column(Integer, primary_key=True)
-#     fullName: Mapped[str] = mapped_column(String,nullable=False)
-#     email: Mapped[str] = mapped_column(String, unique=True,nullable=False)
-#     phone: Mapped[str] = mapped_column(String,unique=True, nullable=False)
-#     picture: Mapped[str] = mapped_column(String)
-#     birthDate: Mapped[str] = mapped_column(Date,nullable=True)
-#     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
-#     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-#     is_superuser: Mapped[bool] = mapped_column(Boolean, default=False)
-#     is_verified: Mapped[bool] = mapped_column(Boolean, default=False)
-
 
 # Base User
 class UserRead(schemas.BaseUser[int]):
-    fullName: str
+    full_name: str
     email: str
     phone: str
     picture: str
-    birthDate: str
+    birth_date: datetime
 
 
 class UserCreate(schemas.BaseUserCreate):
-    fullName: str = Field()
+    full_name: str = Field()
     email: str = Field()
     phone: str = Field()
     picture: str = Field(default=None)
-    birthDate: date = Field(default=None)
+    birth_date: datetime | None
     @field_validator('phone')
     @classmethod
     def check_numeric(cls, v: str, info: ValidationInfo) -> str:
@@ -56,11 +42,11 @@ class UserCreate(schemas.BaseUserCreate):
 
 
 class UserUpdate(schemas.BaseUserUpdate):
-    fullName: str = Field()
+    full_name: str = Field()
     email: str = Field()
-    phone: str
-    picture: str
-    birthDate: date = Field()
+    phone: str = Field()
+    picture: str= Field()
+    birth_date: datetime | None
     @field_validator('phone')
     @classmethod
     def check_numeric(cls, v: str, info: ValidationInfo) -> str:
@@ -70,55 +56,92 @@ class UserUpdate(schemas.BaseUserUpdate):
         return v
     
  
-    
-    
-    
-    
 class EmployeeRead(BaseModel):
     user_id: int
     position: str
     obligations: bytes
 
-    
-
-
 class EmployeeCreate(BaseModel):
-    position: str = Field()
-    obligations: Optional[str] = Field()
+    position: Optional[ str ] = Field(default=None)
+    obligations: Optional[ str ] = Field(default=None)
     
-    
-
     
 class EmployeeUpdate(BaseModel):
-    position: str = Field()
-    obligations: Optional[str] = Field()
-    
-
-    
-    
+    position: Optional[str] = Field(default=None)
+    obligations: Optional[str] = Field(default=None)
     
     
 # Company Schemas
 class CompanyCreate(BaseModel):
-    company_name: Optional[str] = Field()
+    name: Optional[str] = Field()
+    phone: Optional[str] = Field()
     email: Optional[EmailStr] = Field()
     address: Optional[str] = Field()
     location: Optional[str] = Field()
+    info: Optional[str] = Field()
+    type: Optional[str] = Field()
+    name_legal: Optional[str] = Field()
+    INN: Optional[str] = Field()
+    KPP: Optional[str] = Field()
+    OGRN: Optional[str] = Field()
+    OKPO: Optional[str] = Field()
+    BIK: Optional[str] = Field()
+    bank_name: Optional[str] = Field()
+    bank_address: Optional[str] = Field()
+    corr_account: Optional[str] = Field()
+    @field_validator('phone')
+    @classmethod
+    def check_numeric(cls, v: str, info: ValidationInfo) -> str:
+        if isinstance(v, str):
+            is_numeric = v.replace(' ', '').isnumeric()
+            assert is_numeric, f'{info.field_name} phone number must be numeric'
+        return v
 
     
 class CompanyUpdate(BaseModel):
-    company_name:   Optional[str] = Field()
+    name: Optional[str] = Field()
+    phone: Optional[str] = Field()
     email: Optional[EmailStr] = Field()
     address: Optional[str] = Field()
     location: Optional[str] = Field()
+    info: Optional[str] = Field()
+    type: Optional[str] = Field()
+    name_legal: Optional[str] = Field()
+    INN: Optional[str] = Field()
+    KPP: Optional[str] = Field()
+    OGRN: Optional[str] = Field()
+    OKPO: Optional[str] = Field()
+    BIK: Optional[str] = Field()
+    bank_name: Optional[str] = Field()
+    bank_address: Optional[str] = Field()
+    corr_account: Optional[str] = Field()
+    @field_validator('phone')
+    @classmethod
+    def check_numeric(cls, v: str, info: ValidationInfo) -> str:
+        if isinstance(v, str):
+            is_numeric = v.replace(' ', '').isnumeric()
+            assert is_numeric, f'{info.field_name} phone number must be numeric'
+        return v
 
     
     
 class CompanyRead(BaseModel):
     id: int
-    company_name:  str
-    director: str
+    name: str 
+    director: int 
+    phone: str 
     email: EmailStr
-    address: str
-    location: str
+    address: str 
+    location: str 
+    info: str 
+    type: str 
+    name_legal: str 
+    INN: str 
+    KPP: str 
+    OGRN: str 
+    OKPO: str 
+    BIK: str 
+    bank_name: str 
+    bank_address: str 
+    corr_account: str 
 

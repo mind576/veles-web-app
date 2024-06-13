@@ -17,6 +17,7 @@ UUID_ID = uuid.UUID
 class User(SQLAlchemyBaseUserTable[int], Base):
     """
     User table with obvious and visible fields and options.
+    
     """
     __tablename__ = 'users_table'
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -24,7 +25,7 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     email: Mapped[str] = mapped_column(String, unique=True,nullable=False)
     phone: Mapped[str] = mapped_column(String,unique=True, nullable=False)
     picture: Mapped[str] = mapped_column(String)
-    birth_date: Mapped[date] = mapped_column(DateTime,nullable=True)
+    birth_date: Mapped[date] = mapped_column(Date,nullable=True)
     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     is_superuser: Mapped[bool] = mapped_column(Boolean, default=False)
@@ -36,49 +37,52 @@ class User(SQLAlchemyBaseUserTable[int], Base):
 
 
 class Employee(Base):
-    """ User Extension ORM model:\n
-    This model extends class User and helps to store additional data fields for storing Workers data  .
+    """ Employee ORM that extends User model so it gives additional data to user as employee. Logically \n
+    user may change the employment so someone may substitute user on particular position.\n
+    Exact that time when user is employeed this table gives info about position and obligations.\n
+    When particular user is unemployed he has no Employee table...\n
+    This table are used by user which works in the company on concrete position.
+    #### * I recon this table will get some new fields later ---
 
     """
     __tablename__ = 'employee'
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users_table.id"))
+    id: Mapped[int] = mapped_column(Integer,primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users_table.id"),unique=True)
     position: Mapped[Optional[str]] = mapped_column(String,nullable=True)
     obligations: Mapped[str] = mapped_column(String,nullable=True)
 
     
     def __repr__(self):
-        return f"Employee_id={self.user_id}   position={self.position}"
+        return f"id={self.user_id}   position={self.position}  obligations={self.obligations}"
     
     
     
 class Company(Base):
     """ Company ORM model:
-    -- This model helps to store Company item data fields .
-    PEP8 - mixedCase style names
+    -- This model helps to store Company table data fields .
     Args:
         Base (SQLAlchemy Base class): 
     Returns:
         Company ORM Model:
     """
     __tablename__ = 'company_table'
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[Optional[str]] = mapped_column(String)
-    director: Mapped[Optional[int]] = mapped_column(ForeignKey("users_table.id"),nullable=True) # How many directors may run business ??
+    id: Mapped[int] = mapped_column(Integer,primary_key=True)
+    name: Mapped[Optional[str]] = mapped_column(String,unique=True)
+    director: Mapped[int] = mapped_column(ForeignKey("users_table.id"),nullable=True)
     phone: Mapped[str] = mapped_column(String, nullable=False)
     email: Mapped[Optional[str]] = mapped_column(String)
     address: Mapped[Optional[str]] = mapped_column(String)
     location: Mapped[Optional[str]] = mapped_column(String)
     info: Mapped[Optional[str]] = mapped_column(String)
     type: Mapped[Optional[str]] = mapped_column(String)
-    nameLegal: Mapped[Optional[str]] = mapped_column(String)
-    INN: Mapped[Optional[str]] = mapped_column(String)
+    name_legal: Mapped[Optional[str]] = mapped_column(String)
+    INN: Mapped[Optional[str]] = mapped_column(String, unique=True)
     KPP: Mapped[Optional[str]] = mapped_column(String)
     OGRN: Mapped[Optional[str]] = mapped_column(String)
     OKPO: Mapped[Optional[str]] = mapped_column(String)
     BIK: Mapped[Optional[str]] = mapped_column(String)
-    bankName: Mapped[Optional[str]] = mapped_column(String)
-    bankAddress: Mapped[Optional[str]] = mapped_column(String)
-    corrAccount: Mapped[Optional[str]] = mapped_column(String)
+    bank_name: Mapped[Optional[str]] = mapped_column(String)
+    bank_address: Mapped[Optional[str]] = mapped_column(String)
+    corr_account: Mapped[Optional[str]] = mapped_column(String)
     def __repr__(self):
-        return f"Company Name={self.name} company_id={self.id}"
+        return f"Company Name={self.name} company_id={self.id} legal={self.name_legal}"

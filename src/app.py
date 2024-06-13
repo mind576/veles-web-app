@@ -1,19 +1,50 @@
 from fastapi import  FastAPI
-
-
 from src.schemas import UserCreate, UserRead, UserUpdate
 from src.users import auth_backend,  fastapi_users
 from src.employee import ext_router as user_extender_router
-from src.cmp import cmp_router as company_router
+from src.company import cmp_router as company_router
 from settings import config
 from src.db import Base 
 from src.db import engine
 
-# P R E S E N T A T I O N    D A T A
+
+tags_meta = [
+    {
+        "name": "Users",
+        "description": "***User Management Authentication[UMA]*** methods flow. Registration, Authentication, Reset password, typical UMA user flow.",
+        "externalDocs": {
+            "description": "Any question?",
+            "url": "https://t.me/EwanPotterman",
+        
+        },
+
+    },
+    {
+        "name": "Company",
+        "description": "***Company*** ORM model and it's methods for making CRUD operations. Company - represents company item with data fields.",
+        "externalDocs": {
+            "description": "Any question?",
+            "url": "https://t.me/EwanPotterman",
+        
+        },
+
+    },
+    {
+        "name": "Employee",
+        "description": "***Employee*** Methods for ORM model that extends User model. Employee - gives additional data structure to user that became as employee. Logically user may change the employment position so someone may substitute **user** on particular position. When particular _user_ is unemployed he has no Employee table...\nThis table extends user which works in the company on a position.",
+        "externalDocs": {
+            "description": "Any question?",
+            "url": "https://t.me/EwanPotterman",
+        
+        },
+    },
+]
+
+# OpenAPI  - P R E S E N T A T I O N    D A T A
 contact_dict = dict(name=config['CONTACT_NAME'],
                     email=config['CONTACT_EMAIL'],
                                   )
-app = FastAPI(title=config['API_TITLE'],description=config['API_DESCRIPTION'],contact=contact_dict)
+app = FastAPI(title=config['API_TITLE'],description=config['API_DESCRIPTION'],contact=contact_dict,openapi_tags=tags_meta)
 
 # Employee Router - Imported from module employee.py
 app.include_router(
@@ -50,9 +81,17 @@ app.include_router(
 )
 
 
-@app.get("/authenticated-route",tags=['Hello World Method'])
-async def authenticated_route(command:str = None):
-    """Dev usage cludge"""
+@app.get("/drop-create",tags=['Base Migrations Method'])
+async def metadata_route(command:str = None):
+    """Dev usage cludge:
+    For making migrations use this route by writing in command query - create_all | drop_all
+
+    "details":\n
+                {
+                "drop_all": "deletes all tables in database",
+                "create_all": "creates all tables using Metadata object."
+                }
+    """
     if command:
         match command:
             case "create_all":
