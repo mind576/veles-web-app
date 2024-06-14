@@ -84,7 +84,7 @@ async def create_company(
 
 
 
-@cmp_router.patch("/update/{company_id}",tags=['Update Company Method'])
+@cmp_router.put("/update/{company_id}",tags=['Update Company Method'])
 async def update_company(
     company_id: int,
     company: CompanyUpdate,

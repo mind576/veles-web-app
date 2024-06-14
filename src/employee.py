@@ -49,7 +49,7 @@ async def create_employee(
 
 
 
-@ext_router.patch("/update/{user_id}",tags=['Update Employee Method'])
+@ext_router.put("/update/{user_id}",tags=['Update Employee Method'])
 async def update_emloyee(
     user_id: int,
     employee: EmployeeUpdate,
@@ -127,13 +127,12 @@ async def delete_employee(
     session: AsyncSession = Depends(get_async_session),
     ):
     """
-   ### Async method that deletes Company item :\n
-    Company - are created by registred ***user***, user who creates company is superuser and admin for particular company  .\n
+   ### Async method that deletes Employee item :\n
+    Employee - are created by registred ***user***.\n
     Args:\n
         user - Depends(current_superuser).\n
         session - (AsyncSession) Depends(get_async_session).\n
-        company - Company ORM\n
-    #### *Only director my change Compay data.  
+        employee_id - Employee ORM\n 
     ##### Please read schema for understanding JSON schema
     """
     try:

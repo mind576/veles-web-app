@@ -15,8 +15,8 @@ if config['POSTGRES_DOCKER_BUILD'] == 'True':
     PG_HOST = config["POSTGRES_HOST_DOCKER"]
 elif config['POSTGRES_DOCKER_BUILD'] == 'False':
     PG_DOCKER_RUN_DEV_MODE = config['DEV_DOKER_POSTGRES_CMD']
-    PG_HOST = config["POSTGRES_HOST_LOCAL"]
-
+    PG_HOST = config["POSTGRES_HOST_LOCAL"]  
+    # N O T I C E   ---    While building app with docker-compose this part running "docker run postgres container"
     # os.system(PG_DOCKER_RUN_DEV_MODE)            
     # time.sleep(10)
     # os.system(f'echo "Service is run on {PG_HOST}"')
