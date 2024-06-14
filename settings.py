@@ -27,7 +27,7 @@ PG_USER = config['POSTGRES_USER']
 PG_DB_NAME = config['POSTGRES_DB']
 SECRET_TOKEN =config['SECRET_TOKEN']
 PG_PORT=config['POSTGRES_PORT']
-
+JWT_TOKEN_LIFETIME = config['JWT_TOKEN_LIFETIME']
 
 
 # uvicorn src.app:app --reload

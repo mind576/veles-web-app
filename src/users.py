@@ -1,6 +1,6 @@
 import uuid
 from typing import Optional
-from settings import SECRET_TOKEN
+from settings import SECRET_TOKEN, JWT_TOKEN_LIFETIME
 from fastapi import Depends, Request
 from fastapi_users import BaseUserManager, FastAPIUsers, IntegerIDMixin
 from fastapi_users.authentication import (
@@ -15,10 +15,10 @@ from src.db import User, get_user_db
 # Token generating
 SECRET = SECRET_TOKEN
 
-
+# Password management
 class UserManager(IntegerIDMixin, BaseUserManager[User,int]):
-    reset_password_token_secret = SECRET
-    verification_token_secret = SECRET
+    reset_password_token_secret = SECRET_TOKEN
+    verification_token_secret = SECRET_TOKEN
 
     async def on_after_register(self, user: User, request: Optional[Request] = None):
         print(f"User {user.id} has registered.")
@@ -42,7 +42,7 @@ bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
 
 
 def get_jwt_strategy() -> JWTStrategy:
-    return JWTStrategy(secret=SECRET, lifetime_seconds=3600)
+    return JWTStrategy(secret=SECRET_TOKEN, lifetime_seconds=JWT_TOKEN_LIFETIME)
 
 
 auth_backend = AuthenticationBackend(

@@ -78,7 +78,7 @@ class Company(Base):
     name_legal: Mapped[Optional[str]] = mapped_column(String)
     INN: Mapped[Optional[str]] = mapped_column(String, unique=True)
     KPP: Mapped[Optional[str]] = mapped_column(String)
-    OGRN: Mapped[Optional[str]] = mapped_column(String)
+    OGRN: Mapped[Optional[str]] = mapped_column(String,unique=True)
     OKPO: Mapped[Optional[str]] = mapped_column(String)
     BIK: Mapped[Optional[str]] = mapped_column(String)
     bank_name: Mapped[Optional[str]] = mapped_column(String)

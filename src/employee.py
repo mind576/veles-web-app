@@ -115,3 +115,33 @@ async def get_employee_id(
             
         except SQLAlchemyError as e:                                            # <<<< later will do e  to logger
             raise HTTPException(status_code=404,detail=status.HTTP_404_NOT_FOUND)
+
+
+##### HERE
+
+@ext_router.delete("/delete/{employee_id}",tags=['Delete Employee Method'])
+async def delete_employee(
+    employee_id: int,
+    user: User = Depends(current_active_user), # T E M P O R A R Y - only superuser may update Employee
+    # user: User = Depends(current_superuser)
+    session: AsyncSession = Depends(get_async_session),
+    ):
+    """
+   ### Async method that deletes Company item :\n
+    Company - are created by registred ***user***, user who creates company is superuser and admin for particular company  .\n
+    Args:\n
+        user - Depends(current_superuser).\n
+        session - (AsyncSession) Depends(get_async_session).\n
+        company - Company ORM\n
+    #### *Only director my change Compay data.  
+    ##### Please read schema for understanding JSON schema
+    """
+    try:
+        if user and employee_id:
+            del_employee = await session.get(Employee, employee_id)
+            if del_employee.id == employee_id:
+                await session.delete(del_employee)
+                await session.commit()
+    except SQLAlchemyError as e:                            # <<<< later will do e  to logger
+        raise HTTPException(status_code=404,detail=status.HTTP_404_NOT_FOUND)
+    return Response(status_code=201)
