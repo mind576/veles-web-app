@@ -1,5 +1,5 @@
-from typing import Optional
-from sqlalchemy.orm import Mapped, mapped_column 
+from typing import Optional,List
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from fastapi_users.db import SQLAlchemyBaseUserTable
 from settings import *
 from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
@@ -19,8 +19,8 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     User table with obvious and visible fields and options.
     
     """
-    __tablename__ = 'users_table'
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    __tablename__ = 'user_table'
+    id: Mapped[int] = mapped_column(Integer, autoincrement=True, primary_key=True)
     full_name: Mapped[str] = mapped_column(String,nullable=False)
     email: Mapped[str] = mapped_column(String, unique=True,nullable=False)
     phone: Mapped[str] = mapped_column(String,unique=True, nullable=False)
@@ -45,12 +45,15 @@ class Employee(Base):
     #### * I recon this table will get some new fields later ---
 
     """
-    __tablename__ = 'employee'
-    id: Mapped[int] = mapped_column(Integer,primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users_table.id"),unique=True)
+    __tablename__ = 'employee_table'
+    id: Mapped[int] = mapped_column(Integer,primary_key=True,autoincrement=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user_table.id"),unique=True)
     position: Mapped[Optional[str]] = mapped_column(String,nullable=True)
     obligations: Mapped[str] = mapped_column(String,nullable=True)
-
+    company_id: Mapped[int] = mapped_column(ForeignKey("company_table.id"))
+    company: Mapped["Company"] = relationship(back_populates="employees")
+    options_one: Mapped[list] = mapped_column(String)
+    options_two: Mapped[list] = mapped_column(String)
     
     def __repr__(self):
         return f"id={self.user_id}   position={self.position}  obligations={self.obligations}"
@@ -68,7 +71,7 @@ class Company(Base):
     __tablename__ = 'company_table'
     id: Mapped[int] = mapped_column(Integer,primary_key=True)
     name: Mapped[Optional[str]] = mapped_column(String,unique=True)
-    director: Mapped[int] = mapped_column(ForeignKey("users_table.id"),nullable=True)
+    director: Mapped[int] = mapped_column(ForeignKey("user_table.id"),nullable=True)
     phone: Mapped[str] = mapped_column(String, nullable=False)
     email: Mapped[Optional[str]] = mapped_column(String)
     address: Mapped[Optional[str]] = mapped_column(String)
@@ -84,5 +87,7 @@ class Company(Base):
     bank_name: Mapped[Optional[str]] = mapped_column(String)
     bank_address: Mapped[Optional[str]] = mapped_column(String)
     corr_account: Mapped[Optional[str]] = mapped_column(String)
+    employees: Mapped[List["Employee"]] = relationship(back_populates="company")
+
     def __repr__(self):
         return f"Company Name={self.name} company_id={self.id} legal={self.name_legal}"

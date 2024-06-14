@@ -14,7 +14,8 @@ from src.db import User, get_user_db
 
 # Token generating
 SECRET = SECRET_TOKEN
-
+# token lifetime
+lifetime_seconds = int(JWT_TOKEN_LIFETIME)
 # Password management
 class UserManager(IntegerIDMixin, BaseUserManager[User,int]):
     reset_password_token_secret = SECRET_TOKEN
@@ -42,7 +43,7 @@ bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
 
 
 def get_jwt_strategy() -> JWTStrategy:
-    return JWTStrategy(secret=SECRET_TOKEN, lifetime_seconds=JWT_TOKEN_LIFETIME)
+    return JWTStrategy(secret=SECRET_TOKEN, lifetime_seconds=lifetime_seconds)
 
 
 auth_backend = AuthenticationBackend(

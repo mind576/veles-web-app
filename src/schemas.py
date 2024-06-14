@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional,Union,AnyStr,Any
+from typing import Optional,Union,AnyStr,Any,List
 from datetime import datetime, date
 from fastapi_users import schemas
 from pydantic import field_validator,Field
@@ -60,15 +60,24 @@ class EmployeeRead(BaseModel):
     user_id: int
     position: str
     obligations: bytes
+    company: str
+    option_one: List
+    option_two: List
 
 class EmployeeCreate(BaseModel):
     position: Optional[ str ] = Field(default=None)
     obligations: Optional[ str ] = Field(default=None)
+    company: Optional[str]
+    option_one: Optional[List] = Field(default=None)
+    option_two: Optional[List] = Field(default=None)
     
     
 class EmployeeUpdate(BaseModel):
     position: Optional[str] = Field(default=None)
     obligations: Optional[str] = Field(default=None)
+    company: Optional[str]
+    option_one: Optional[List] = Field(default=None)
+    option_two: Optional[List] = Field(default=None)
     
     
 # Company Schemas
@@ -89,6 +98,7 @@ class CompanyCreate(BaseModel):
     bank_name: Optional[str] = Field()
     bank_address: Optional[str] = Field()
     corr_account: Optional[str] = Field()
+    employees: List = None
     @field_validator('phone')
     @classmethod
     def check_numeric(cls, v: str, info: ValidationInfo) -> str:
@@ -115,6 +125,7 @@ class CompanyUpdate(BaseModel):
     bank_name: Optional[str] = Field()
     bank_address: Optional[str] = Field()
     corr_account: Optional[str] = Field()
+    employees: List
     @field_validator('phone')
     @classmethod
     def check_numeric(cls, v: str, info: ValidationInfo) -> str:
@@ -144,4 +155,5 @@ class CompanyRead(BaseModel):
     bank_name: str 
     bank_address: str 
     corr_account: str 
+    employees: List
 
