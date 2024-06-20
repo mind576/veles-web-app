@@ -28,6 +28,10 @@ PG_DB_NAME = config['POSTGRES_DB']
 SECRET_TOKEN =config['SECRET_TOKEN']
 PG_PORT=config['POSTGRES_PORT']
 JWT_TOKEN_LIFETIME = config['JWT_TOKEN_LIFETIME']
+# REDIS cache
+CACHE_EXP = config['CACHE_EXP']
+LOCAL_REDIS_URL = config['LOCAL_REDIS_URL']
+CACHE_PREFIX = config['CACHE_PREFIX']
 
 
 # uvicorn src.app:app --reload

@@ -6,6 +6,12 @@ from src.company import cmp_router as company_router
 from settings import config
 from src.db import Base 
 from src.db import engine
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
+from fastapi_cache.decorator import cache
+
+from redis import asyncio as aioredis
+from settings import LOCAL_REDIS_URL,CACHE_PREFIX
 
 
 tags_meta = [
@@ -110,3 +116,9 @@ async def metadata_route(command:str = None):
 #     async with engine.begin() as conn:
 #         # await conn.run_sync(Base.metadata.drop_all)
 #         await conn.run_sync(Base.metadata.create_all)
+
+# REDIS startup
+@app.on_event("startup")
+async def startup():
+    redis = aioredis.from_url(LOCAL_REDIS_URL)
+    FastAPICache.init(RedisBackend(redis), prefix=CACHE_PREFIX)

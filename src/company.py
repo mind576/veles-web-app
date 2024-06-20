@@ -13,7 +13,7 @@ from src.schemas import CompanyCreate, CompanyRead, CompanyUpdate
 from src.db import AsyncSession, get_async_session
 from sqlalchemy import select, update
 from starlette import status
-
+from fastapi_cache.decorator import cache as cache_decorator
 
 current_user = fastapi_users.current_user(active=True)
 
@@ -161,3 +161,11 @@ async def delete_company(
         raise HTTPException(status_code=404,detail=status.HTTP_404_NOT_FOUND)
     return Response(status_code=201)
 
+
+from datetime import datetime
+currtime = datetime.now()
+
+@cmp_router.get("/get")
+@cache_decorator(expire=60,namespace="Company-Items")
+def get_company():
+    return {"timestamp": currtime}
