@@ -60,24 +60,35 @@ class EmployeeRead(BaseModel):
     user_id: int
     position: str
     obligations: bytes
+    company_id: int
     company: str
-    option_one: List
-    option_two: List
+    # option_one: List
+    # option_two: List
+
+
+# id: Mapped[int] = mapped_column(Integer,primary_key=True,autoincrement=True)
+#     user_id: Mapped[int] = mapped_column(ForeignKey("user_table.id"),unique=True)
+#     position: Mapped[Optional[str]] = mapped_column(String,nullable=True)
+#     obligations: Mapped[str] = mapped_column(String,nullable=True)
+#     company_id: Mapped[int] = mapped_column(ForeignKey("company_table.id"))
+#     company: Mapped["Company"] = relationship(back_populates="employees")
 
 class EmployeeCreate(BaseModel):
+    user_id: Optional[int] = Field(default=None)
     position: Optional[ str ] = Field(default=None)
     obligations: Optional[ str ] = Field(default=None)
-    company: Optional[str]
-    option_one: Optional[List] = Field(default=None)
-    option_two: Optional[List] = Field(default=None)
+    company_id: Optional[int] = Field()
+
+    # option_one: Optional[List] = Field(default=None)
+    # option_two: Optional[List] = Field(default=None)
     
     
 class EmployeeUpdate(BaseModel):
     position: Optional[str] = Field(default=None)
     obligations: Optional[str] = Field(default=None)
-    company: Optional[str]
-    option_one: Optional[List] = Field(default=None)
-    option_two: Optional[List] = Field(default=None)
+    company_id: Optional[int] = Field()
+    # option_one: Optional[List] = Field(default=None)
+    # option_two: Optional[List] = Field(default=None)
     
     
 # Company Schemas
@@ -150,10 +161,10 @@ class CompanyRead(BaseModel):
     INN: str 
     KPP: str 
     OGRN: str 
-    OKPO: str 
+    OKPO: Optional[ str | None ]
     BIK: str 
     bank_name: str 
     bank_address: str 
     corr_account: str 
-    employees: List
+    employees: Optional[ List | None ]
 

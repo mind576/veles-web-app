@@ -10,9 +10,12 @@ from src.db import AsyncSession, get_async_session
 from src.schemas import EmployeeRead, EmployeeUpdate,EmployeeCreate
 from sqlalchemy import select, update
 from starlette import status
+from src.custom_responses import *
 
 
-ext_router = APIRouter(prefix="/employee",
+ext_router = APIRouter(
+    prefix="/employee",
+    responses=ROUTER_API_RESPONSES_OPEN_API,
 )
 
 @ext_router.post("/add",tags=['Employee Create Method'])
@@ -43,9 +46,11 @@ async def create_employee(
             )
             session.add(new_employee)
             await session.commit()
-            return JSONResponse(status_code=status.HTTP_201_CREATED,content={"detail":"created"})    
+            return OkJSONResponse
     except SQLAlchemyError as e:
-        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=str(e))    
+        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=str(e))
+
+        
 
 
 
@@ -75,12 +80,16 @@ async def update_emloyee(
                 Employee.user_id == user_id).values(
                     position=employee.position,
                     obligations=employee.obligations,
+                    company_id=employee.company
                 )
             await session.execute(statement)
             await session.commit()
-    except SQLAlchemyError as e:                            # <<<< later will do e  to logger
-        raise HTTPException(status_code=404,detail=status.HTTP_404_NOT_FOUND)
-    return Response(status_code=201)
+            return CreatedJSONResponse
+    except SQLAlchemyError as e:  
+        # <<< logging here
+        return BadRequestJSONResponse                          # <<<< later will do e  to logger
+    #     raise HTTPException(status_code=404,detail=status.HTTP_404_NOT_FOUND)
+    # return CreatedJSONResponse
 
 
 
@@ -119,7 +128,16 @@ async def get_employee_id(
 
 ##### HERE
 
-@ext_router.delete("/delete/{employee_id}",tags=['Delete Employee Method'])
+
+
+
+
+@ext_router.delete(
+        "/delete/{employee_id}",
+        summary="Summary Of Employee",
+        tags=['Delete Employee Method'],
+        response_model=None,
+        )
 async def delete_employee(
     employee_id: int,
     user: User = Depends(current_active_user), # T E M P O R A R Y - only superuser may update Employee
@@ -138,9 +156,13 @@ async def delete_employee(
     try:
         if user and employee_id:
             del_employee = await session.get(Employee, employee_id)
-            if del_employee.id == employee_id:
+            if del_employee and del_employee.id == employee_id:
                 await session.delete(del_employee)
                 await session.commit()
+                return AcceptedJSONResponse()
+            else:
+                # raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Not found")
+                return NoContentJSONResponse()
     except SQLAlchemyError as e:                            # <<<< later will do e  to logger
-        raise HTTPException(status_code=404,detail=status.HTTP_404_NOT_FOUND)
-    return Response(status_code=201)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=str(e))
+

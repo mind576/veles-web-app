@@ -50,13 +50,13 @@ class Employee(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("user_table.id"),unique=True)
     position: Mapped[Optional[str]] = mapped_column(String,nullable=True)
     obligations: Mapped[str] = mapped_column(String,nullable=True)
-    company_id: Mapped[int] = mapped_column(ForeignKey("company_table.id"))
-    company: Mapped["Company"] = relationship(back_populates="employees")
-    options_one: Mapped[list] = mapped_column(String)
-    options_two: Mapped[list] = mapped_column(String)
+    company_id: Mapped[int] = mapped_column(ForeignKey("company_table.id"),nullable=True)
+    company: Mapped["Company"] = relationship(back_populates="company_table.name")
+    # options_one: Mapped[list] = mapped_column(String)
+    # options_two: Mapped[list] = mapped_column(String)
     
     def __repr__(self):
-        return f"id={self.user_id}   position={self.position}  obligations={self.obligations}"
+        return f"id={self.user_id}   position={self.position}  company={self.company}"
     
     
     
@@ -87,7 +87,7 @@ class Company(Base):
     bank_name: Mapped[Optional[str]] = mapped_column(String)
     bank_address: Mapped[Optional[str]] = mapped_column(String)
     corr_account: Mapped[Optional[str]] = mapped_column(String)
-    employees: Mapped[List["Employee"]] = relationship(back_populates="company")
+    employees: Mapped[Optional[List["Employee"]]] = relationship(back_populates="company")
 
     def __repr__(self):
         return f"Company Name={self.name} company_id={self.id} legal={self.name_legal}"

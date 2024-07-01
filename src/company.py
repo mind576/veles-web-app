@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Response, Request
 from starlette.responses import JSONResponse
 from src.users import *
 from src.models import Company
@@ -14,12 +14,13 @@ from src.db import AsyncSession, get_async_session
 from sqlalchemy import select, update
 from starlette import status
 from fastapi_cache.decorator import cache as cache_decorator
-
+from fastapi_redis_cache import cache_one_minute
+from src.custom_responses import *
 current_user = fastapi_users.current_user(active=True)
 
 
 cmp_router = APIRouter(prefix="/company",
-    responses={404: {"description": "Not found"}},
+    responses=ROUTER_API_RESPONSES_OPEN_API
 )
 
 # @cmp_router.post("/add",tags=['Create Company Method'])
@@ -79,7 +80,7 @@ async def create_company(
             await session.commit()
             return JSONResponse(status_code=status.HTTP_201_CREATED,content={"detail":"created"})    
     except SQLAlchemyError as e:
-        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=str(e))    
+        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=str(e._message))    
 
 
 
@@ -127,7 +128,7 @@ async def update_company(
             await session.execute(statement)
             await session.commit()
     except SQLAlchemyError as e:                            # <<<< later will do e  to logger
-        raise HTTPException(status_code=404,detail=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(status_code=404,detail=str(e._message))
     return Response(status_code=201)
 
 
@@ -154,18 +155,46 @@ async def delete_company(
     try:
         if user and company_id:
             del_company = await session.get(Company, company_id)
-            if del_company.director == user.id:
+            if del_company:
                 await session.delete(del_company)
                 await session.commit()
+            elif not del_company:
+                return Response(status_code=status.HTTP_404_NOT_FOUND,content="not exist",background=print(str(del_company))) # Logger binding with background param
+                
     except SQLAlchemyError as e:                            # <<<< later will do e  to logger
-        raise HTTPException(status_code=404,detail=status.HTTP_404_NOT_FOUND)
-    return Response(status_code=201)
+        raise HTTPException(status_code=404,detail=str(e._message))
+    return Response(status_code=status.HTTP_200_OK)
 
 
-from datetime import datetime
-currtime = datetime.now()
+@cmp_router.get("/get/{company_id}",tags=['Get by ID Company Method']) #,response_model=CompanyRead)
+async def get_company_id(
+    company_id: int,
+    user: User = Depends(current_active_user), # T E M P O R A R Y - only superuser may update Employee
+    # user: User = Depends(current_superuser)
+    session: AsyncSession = Depends(get_async_session),
+    ):
+    """
+   ### Async method that gets Company item by id :\n
+    Company - are created by registred ***user***, user who creates company is superuser and admin for particular company  .\n
+    Args:\n
+        user - Depends(current_superuser).\n
+        session - (AsyncSession) Depends(get_async_session).\n
+        company - Company ORM\n
+    #### *Only director my change Compay data.  
+    ##### Please read schema for understanding JSON schema
+    """
+    try:
+        if user and company_id:
+            company = await session.get(Company, company_id)
+            if company:
+                return company
+    except SQLAlchemyError as e:                            # <<<< later will do e  to logger
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=str(e._message))
+    return Response(status_code=status.HTTP_404_NOT_FOUND)
 
-@cmp_router.get("/get")
-@cache_decorator(expire=60,namespace="Company-Items")
-def get_company():
-    return {"timestamp": currtime}
+
+# Response.background = logger
+
+
+
+
