@@ -38,11 +38,12 @@ async def create_employee(
     ##### Please read schema for understanding JSON schema
     """
     try:
-        if isinstance(employee.position,str):
+        if isinstance(employee.position,str): # temporary checker
             new_employee = Employee(
-            user_id=user.id,
+            user_id=employee.user_id,
             position=employee.position,
-            obligations=employee.obligations
+            obligations=employee.obligations,
+            company_id=employee.company_id,
             )
             session.add(new_employee)
             await session.commit()
@@ -55,7 +56,7 @@ async def create_employee(
 
 
 @ext_router.put("/update/{user_id}",tags=['Update Employee Method'])
-async def update_emloyee(
+async def update_employee(
     user_id: int,
     employee: EmployeeUpdate,
     user: User = Depends(current_active_user), # T E M P O R A R Y - only superuser may update Employee
@@ -78,9 +79,10 @@ async def update_emloyee(
             statement = update(
             Employee).where(
                 Employee.user_id == user_id).values(
+                    user_id=employee.user_id,
                     position=employee.position,
                     obligations=employee.obligations,
-                    company_id=employee.company
+                    company_id=employee.company_id,
                 )
             await session.execute(statement)
             await session.commit()

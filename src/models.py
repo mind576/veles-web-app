@@ -32,7 +32,7 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     is_verified: Mapped[bool] = mapped_column(Boolean, default=False)
 
     def __repr__(self):
-        return f" id={self.id} name= {self.fullName} "
+        return f" id={self.id} name= {self.full_name} "
 
 
 
@@ -48,12 +48,10 @@ class Employee(Base):
     __tablename__ = 'employee_table'
     id: Mapped[int] = mapped_column(Integer,primary_key=True,autoincrement=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("user_table.id"),unique=True)
-    position: Mapped[Optional[str]] = mapped_column(String,nullable=True)
+    position: Mapped[str] = mapped_column(String,nullable=True)
     obligations: Mapped[str] = mapped_column(String,nullable=True)
     company_id: Mapped[int] = mapped_column(ForeignKey("company_table.id"),nullable=True)
-    company: Mapped["Company"] = relationship(back_populates="company_table.name")
-    # options_one: Mapped[list] = mapped_column(String)
-    # options_two: Mapped[list] = mapped_column(String)
+    company: Mapped["Company"] = relationship(back_populates="employees")
     
     def __repr__(self):
         return f"id={self.user_id}   position={self.position}  company={self.company}"
@@ -70,24 +68,24 @@ class Company(Base):
     """
     __tablename__ = 'company_table'
     id: Mapped[int] = mapped_column(Integer,primary_key=True)
-    name: Mapped[Optional[str]] = mapped_column(String,unique=True)
+    name: Mapped[str] = mapped_column(String,unique=True)
     director: Mapped[int] = mapped_column(ForeignKey("user_table.id"),nullable=True)
     phone: Mapped[str] = mapped_column(String, nullable=False)
-    email: Mapped[Optional[str]] = mapped_column(String)
-    address: Mapped[Optional[str]] = mapped_column(String)
-    location: Mapped[Optional[str]] = mapped_column(String)
-    info: Mapped[Optional[str]] = mapped_column(String)
-    type: Mapped[Optional[str]] = mapped_column(String)
-    name_legal: Mapped[Optional[str]] = mapped_column(String)
-    INN: Mapped[Optional[str]] = mapped_column(String, unique=True)
-    KPP: Mapped[Optional[str]] = mapped_column(String)
-    OGRN: Mapped[Optional[str]] = mapped_column(String,unique=True)
-    OKPO: Mapped[Optional[str]] = mapped_column(String)
-    BIK: Mapped[Optional[str]] = mapped_column(String)
-    bank_name: Mapped[Optional[str]] = mapped_column(String)
-    bank_address: Mapped[Optional[str]] = mapped_column(String)
-    corr_account: Mapped[Optional[str]] = mapped_column(String)
-    employees: Mapped[Optional[List["Employee"]]] = relationship(back_populates="company")
+    email: Mapped[str] = mapped_column(String)
+    address: Mapped[str] = mapped_column(String)
+    location: Mapped[str] = mapped_column(String)
+    info: Mapped[str] = mapped_column(String)
+    type: Mapped[str] = mapped_column(String)
+    name_legal: Mapped[str] = mapped_column(String)
+    INN: Mapped[str] = mapped_column(String, unique=True)
+    KPP: Mapped[str] = mapped_column(String)
+    OGRN: Mapped[str] = mapped_column(String,unique=True)
+    OKPO: Mapped[str] = mapped_column(String,nullable=True) #<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    BIK: Mapped[str] = mapped_column(String)
+    bank_name: Mapped[str] = mapped_column(String)
+    bank_address: Mapped[str] = mapped_column(String)
+    corr_account: Mapped[str] = mapped_column(String)
+    employees: Mapped[List["Employee"]] = relationship(back_populates="company")
 
     def __repr__(self):
         return f"Company Name={self.name} company_id={self.id} legal={self.name_legal}"

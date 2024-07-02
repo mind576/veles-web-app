@@ -57,7 +57,7 @@ async def create_company(
     ##### Please read schema for understanding JSON schema
     """
     try:
-        if isinstance(company,CompanyCreate):
+        if isinstance(company,CompanyCreate): # temporary check
             new_company = Company(
                 name = company.name,
                 director = user.id,
@@ -70,7 +70,8 @@ async def create_company(
                 name_legal = company.name_legal,
                 INN = company.INN,
                 KPP = company.KPP,
-                OGRN = company.OGRN,                                        # NO SOLVED PUT DATA
+                OGRN = company.OGRN,
+                OKPO = company.OKPO,                                        # NO SOLVED PUT DATA
                 BIK = company.BIK,
                 bank_name = company.bank_name,
                 bank_address= company.bank_address,
@@ -105,6 +106,26 @@ async def update_company(
     """
     try:
         if user:
+# id: Mapped[int] = mapped_column(Integer,primary_key=True)
+#     name: Mapped[str] = mapped_column(String,unique=True)
+#     director: Mapped[int] = mapped_column(ForeignKey("user_table.id"),nullable=True)
+#     phone: Mapped[str] = mapped_column(String, nullable=False)
+#     email: Mapped[str] = mapped_column(String)
+#     address: Mapped[str] = mapped_column(String)
+#     location: Mapped[str] = mapped_column(String)
+#     info: Mapped[str] = mapped_column(String)
+#     type: Mapped[str] = mapped_column(String)
+#     name_legal: Mapped[str] = mapped_column(String)
+#     INN: Mapped[str] = mapped_column(String, unique=True)
+#     KPP: Mapped[str] = mapped_column(String)
+#     OGRN: Mapped[str] = mapped_column(String,unique=True)
+#     OKPO: Mapped[str] = mapped_column(String,nullable=True) #<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+#     BIK: Mapped[str] = mapped_column(String)
+#     bank_name: Mapped[str] = mapped_column(String)
+#     bank_address: Mapped[str] = mapped_column(String)
+#     corr_account: Mapped[str] = mapped_column(String)
+#     employees: Mapped[List["Employee"]] = relationship(back_populates="company")
+
             statement = update(
             Company).where(
                 Company.id == company_id).values(
@@ -119,7 +140,8 @@ async def update_company(
                     name_legal = company.name_legal,
                     INN = company.INN,
                     KPP = company.KPP,
-                    OGRN = company.OGRN,                                        # Temporary how
+                    OGRN = company.OGRN,
+                    OKPO = company.OKPO,                                                                                # Temporary how
                     BIK = company.BIK,
                     bank_name = company.bank_name,
                     bank_address= company.bank_address,
@@ -128,8 +150,8 @@ async def update_company(
             await session.execute(statement)
             await session.commit()
     except SQLAlchemyError as e:                            # <<<< later will do e  to logger
-        raise HTTPException(status_code=404,detail=str(e._message))
-    return Response(status_code=201)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=str(e._message))
+    # return Response(status_code=201)
 
 
 

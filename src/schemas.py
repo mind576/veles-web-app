@@ -20,7 +20,7 @@ class UserRead(schemas.BaseUser[int]):
     email: str
     phone: str
     picture: str
-    birth_date: datetime
+    birth_date: date
 
 
 class UserCreate(schemas.BaseUserCreate):
@@ -28,7 +28,7 @@ class UserCreate(schemas.BaseUserCreate):
     email: str = Field()
     phone: str = Field()
     picture: str = Field(default=None)
-    birth_date: datetime | None
+    birth_date: date | None
     @field_validator('phone')
     @classmethod
     def check_numeric(cls, v: str, info: ValidationInfo) -> str:
@@ -45,8 +45,8 @@ class UserUpdate(schemas.BaseUserUpdate):
     full_name: str = Field()
     email: str = Field()
     phone: str = Field()
-    picture: str= Field()
-    birth_date: datetime | None
+    picture: str = Field()
+    birth_date: date | None
     @field_validator('phone')
     @classmethod
     def check_numeric(cls, v: str, info: ValidationInfo) -> str:
@@ -56,31 +56,27 @@ class UserUpdate(schemas.BaseUserUpdate):
         return v
     
  
+
+
+# E M P L O Y E E     S C H E M A S
+
 class EmployeeRead(BaseModel):
     user_id: int
     position: str
     obligations: bytes
     company_id: int
     company: str
-    # option_one: List
-    # option_two: List
 
 
-# id: Mapped[int] = mapped_column(Integer,primary_key=True,autoincrement=True)
-#     user_id: Mapped[int] = mapped_column(ForeignKey("user_table.id"),unique=True)
-#     position: Mapped[Optional[str]] = mapped_column(String,nullable=True)
-#     obligations: Mapped[str] = mapped_column(String,nullable=True)
-#     company_id: Mapped[int] = mapped_column(ForeignKey("company_table.id"))
-#     company: Mapped["Company"] = relationship(back_populates="employees")
+
 
 class EmployeeCreate(BaseModel):
     user_id: Optional[int] = Field(default=None)
-    position: Optional[ str ] = Field(default=None)
-    obligations: Optional[ str ] = Field(default=None)
+    position: Optional[str] = Field(default=None)
+    obligations: Optional[str] = Field(default=None)
     company_id: Optional[int] = Field()
 
-    # option_one: Optional[List] = Field(default=None)
-    # option_two: Optional[List] = Field(default=None)
+
     
     
 class EmployeeUpdate(BaseModel):
