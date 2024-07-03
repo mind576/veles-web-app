@@ -11,7 +11,7 @@ config = dotenv_values(f"{root_dir}/.env")
 
 # # # #      - = TEMP KLUDGE = -    DEVELOPMENT USAGE ONLY (костыль для разработки)
 
-if config['POSTGRES_DOCKER_BUILD'] == 'True':
+if config['POSTGRES_DOCKER_BUILD'] == 'True':   #### This param true/false  docker build
     PG_HOST = config["POSTGRES_HOST_DOCKER"]
 elif config['POSTGRES_DOCKER_BUILD'] == 'False':
     PG_DOCKER_RUN_DEV_MODE = config['DEV_DOKER_POSTGRES_CMD']

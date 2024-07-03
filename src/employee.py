@@ -18,7 +18,7 @@ ext_router = APIRouter(
     responses=ROUTER_API_RESPONSES_OPEN_API,
 )
 
-@ext_router.post("/add",tags=['Employee Create Method'])
+@ext_router.post("/add")
 async def create_employee(
     employee: EmployeeCreate,
     user: User = Depends(current_active_user), # T E M P O R A R Y implementation are current_userlater it should do superuser
@@ -55,7 +55,7 @@ async def create_employee(
 
 
 
-@ext_router.put("/update/{user_id}",tags=['Update Employee Method'])
+@ext_router.put("/update/{user_id}")
 async def update_employee(
     user_id: int,
     employee: EmployeeUpdate,
@@ -97,7 +97,7 @@ async def update_employee(
 
 
 
-@ext_router.get("/get/{user_id}",response_model=EmployeeRead,tags=['Get Employee item by user_id'])
+@ext_router.get("/get/{user_id}",response_model=EmployeeRead)
 async def get_employee_id(
     user_id: int,
     user: User = Depends(current_active_user),
@@ -137,7 +137,6 @@ async def get_employee_id(
 @ext_router.delete(
         "/delete/{employee_id}",
         summary="Summary Of Employee",
-        tags=['Delete Employee Method'],
         response_model=None,
         )
 async def delete_employee(

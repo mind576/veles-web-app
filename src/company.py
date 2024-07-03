@@ -39,7 +39,7 @@ cmp_router = APIRouter(prefix="/company",
 
 
 
-@cmp_router.post("/add",tags=['Company Create Method'])
+@cmp_router.post("/add")
 async def create_company(
     company: CompanyCreate,
     user: User = Depends(current_active_user), # T E M P O R A R Y implementation are current_userlater it should do superuser
@@ -86,7 +86,7 @@ async def create_company(
 
 
 
-@cmp_router.put("/update/{company_id}",tags=['Update Company Method'])
+@cmp_router.put("/update/{company_id}")
 async def update_company(
     company_id: int,
     company: CompanyUpdate,
@@ -157,7 +157,7 @@ async def update_company(
 
 # DELETE COMPANY
 
-@cmp_router.delete("/delete/{company_id}",tags=['Delete Company Method'])
+@cmp_router.delete("/delete/{company_id}")
 async def delete_company(
     company_id: int,
     user: User = Depends(current_active_user), # T E M P O R A R Y - only superuser may update Employee
@@ -188,7 +188,7 @@ async def delete_company(
     return Response(status_code=status.HTTP_200_OK)
 
 
-@cmp_router.get("/get/{company_id}",tags=['Get by ID Company Method']) #,response_model=CompanyRead)
+@cmp_router.get("/get/{company_id}") #,response_model=CompanyRead)
 async def get_company_id(
     company_id: int,
     user: User = Depends(current_active_user), # T E M P O R A R Y - only superuser may update Employee

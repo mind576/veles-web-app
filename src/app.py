@@ -87,35 +87,35 @@ app.include_router(
 )
 
 
-@app.get("/drop-create",tags=['Base Migrations Method'])
-async def metadata_route(command:str = None):
-    """Dev usage cludge:
-    For making migrations use this route by writing in command query - create_all | drop_all
+# @app.get("/drop-create",tags=['Base Migrations Method'])
+# async def metadata_route(command:str = None):
+#     """Dev usage cludge:
+#     For making migrations use this route by writing in command query - create_all | drop_all
 
-    "details":\n
-                {
-                "drop_all": "deletes all tables in database",
-                "create_all": "creates all tables using Metadata object."
-                }
-    """
-    if command:
-        match command:
-            case "create_all":
-                async with engine.begin() as conn:
-                    await conn.run_sync(Base.metadata.create_all)
-            case "drop_all":
-                async with engine.begin() as conn:
-                    await conn.run_sync(Base.metadata.drop_all)
+#     "details":\n
+#                 {
+#                 "drop_all": "deletes all tables in database",
+#                 "create_all": "creates all tables using Metadata object."
+#                 }
+#     """
+#     if command:
+#         match command:
+#             case "create_all":
+#                 async with engine.begin() as conn:
+#                     await conn.run_sync(Base.metadata.create_all)
+#             case "drop_all":
+#                 async with engine.begin() as conn:
+#                     await conn.run_sync(Base.metadata.drop_all)
                     
-    return {"message": f"Hello Word!" }
+#     return {"message": f"Hello Word!" }
 
 
-# import importlib
-# @app.on_event("startup")
-# async def on_startup():
-#     async with engine.begin() as conn:
-#         # await conn.run_sync(Base.metadata.drop_all)
-#         await conn.run_sync(Base.metadata.create_all)
+import importlib
+@app.on_event("startup")
+async def on_startup():
+    async with engine.begin() as conn:
+        # await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)
 
 # REDIS startup
 @app.on_event("startup")

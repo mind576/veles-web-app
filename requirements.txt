@@ -18,6 +18,7 @@ email_validator==2.1.1
 fastapi==0.111.0
 fastapi-cache2==0.2.1
 fastapi-cli==0.0.3
+fastapi-redis-cache==0.2.5
 fastapi-users==13.0.0
 fastapi-users-db-sqlalchemy==6.0.1
 frozenlist==1.4.1
